@@ -7,6 +7,6 @@
 		<title>DDCB Jeopardy</title>
 	</head>
 	<body>
-		<h1>This is Jeopardy! :)</h1>
+		<h1>This is Jeopardy! :D</h1>
 	</body>
 </html>
