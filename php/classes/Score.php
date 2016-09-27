@@ -85,5 +85,74 @@ class Score{
 	 */
 	public function setScoreId(int $newScoreId){
 		//verify scoreId is valid
+		if($newScoreId === null){
+			$this->scoreId = null;
+			return;
+		}
+		if($newScoreId <=0){
+			throw(new \RangeException("ScoreId must be a positive number"));
+		}
+		//convert and store value
+		$this->scoreId = $newScoreId;
+	}
+
+	/**
+	 * Accessor method for scoreGameId
+	 *
+	 * @return int
+	 */
+	/**
+	 * @return int
+	 */
+	public function getScoreGameId(){
+		return ($this->scoreGameId);
+	}
+	/**
+	 * Mutator method for scoreGameId
+	 *
+	 * @param $newScoreGameId
+	 * @throws \TypeError if variables are not the correct data type
+	 * @throws \RangeException if scoreGameId is not valid
+	 */
+	public function setScoreGameId(int $scoreGameId) {
+		//convert and store the value
+		$this->scoreGameId = $scoreGameId;
+	}
+	/**
+	 * Accessor method for scoreStudentId
+	 *
+	 * @return int
+	 */
+	public function getScoreStudentId(){
+		return ($this->scoreStudentId);
+	}
+	/**
+	 * Mutator method for scoreStudentId
+	 *
+	 * @param $newScoreStudentId
+	 * @throws \TypeError if variables are not the correct data type
+	 */
+	 public function setScoreStudentId(int $scoreStudentId) {
+	 	//convert and store the value
+		$this->scoreStudentId = $scoreStudentId;
+	}
+	/**
+	 * Accessor method for scoreStudentScore
+	 *
+	 * @return int
+	 */
+	public function getScoreStudentScore(){
+		return ($this->scoreStudentScore);
+	}
+
+	/**
+	 * Mutator method for scoreStudentScore
+	 *
+	 * @param int $scoreStudentScore
+	 * @throws \TypeError if variables are not the correct data type
+	 */
+	public function setScoreStudentScore(int $scoreStudentScore) {
+		//convert and store the value
+		$this->scoreStudentScore = $scoreStudentScore;
 	}
 }
