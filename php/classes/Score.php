@@ -101,9 +101,6 @@ class Score{
 	 *
 	 * @return int
 	 */
-	/**
-	 * @return int
-	 */
 	public function getScoreGameId(){
 		return ($this->scoreGameId);
 	}
@@ -112,7 +109,6 @@ class Score{
 	 *
 	 * @param $newScoreGameId
 	 * @throws \TypeError if variables are not the correct data type
-	 * @throws \RangeException if scoreGameId is not valid
 	 */
 	public function setScoreGameId(int $scoreGameId) {
 		//convert and store the value
@@ -154,5 +150,26 @@ class Score{
 	public function setScoreStudentScore(int $scoreStudentScore) {
 		//convert and store the value
 		$this->scoreStudentScore = $scoreStudentScore;
+	}
+	/**
+	 * Insert method
+	 *
+	 * @param \PDO $pdo
+	 * @throws \PDOException if scoreId is not null
+	 */
+	public function insert(\PDO $pdo){
+		if($this->scoreId !== null){
+			throw(new \PDOException("This is a PDOException"));
+		}
+		//create query template
+		$query = "INSERT INTO score(scoreGameId, scoreStudentId, scoreStudentScore)VALUES(:scoreGameId, :scoreStudentId, :scoreStudentScore)";
+		$statement = $pdo->prepare($query);
+
+		//bind variables to the place holders in the template
+		$parameters = ["scoreGameId" => $this->scoreGameId, "scoreStudentId" => $this->scoreStudentId, "scoreStudentScore" => $this->scoreStudentScore];
+		$statement->execute($parameters);
+
+		//update scoreId with what sql returns
+		$this->scoreId = intval($pdo->lastInsertId());
 	}
 }
