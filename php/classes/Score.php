@@ -66,4 +66,24 @@ class Score{
 			throw(new \Exception($exception->getMessage(), 0, $exception));
 		}
 	}
+
+	/**
+	 * Accessor for scoreId
+	 *
+	 * @return int
+	 */
+	public function getScoreId(){
+		return ($this->scoreId);
+	}
+
+	/**
+	 * Mutator for scoreId
+	 *
+	 * @param $newScoreId
+	 * @throws \TypeError if variables are not the correct data type
+	 * @throws \RangeException if scoreId is not valid
+	 */
+	public function setScoreId(int $newScoreId){
+		//verify scoreId is valid
+	}
 }
