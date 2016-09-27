@@ -35,4 +35,35 @@ class Score{
 	 * @var int $scoreStudentScore
 	 */
 	private $scoreStudentScore;
+
+	/**
+	 * Score constructor
+	 *
+	 * @param int $newScoreId
+	 * @param int $newScoreGameId
+	 * @param int $newScoreStudentId
+	 * @param int $newScoreStudentScore
+	 * @throws \TypeError if variables are not the correct data type
+	 * @throws \InvalidArgumentException for invalid exceptions
+	 * @throws \RangeException for exceptions that are out of range
+	 * @throws \Exception for all other exceptions
+	 */
+
+	public function __construct(int $newScoreId, int $newScoreGameId, int $newScoreStudentId, int $newScoreStudentScore) {
+		try{
+			$this->setScoreId($newScoreId);
+			$this->setScoreGameId($newScoreGameId);
+			$this->setScoreStudentId($newScoreStudentId);
+			$this->setScoreStudentScore($newScoreStudentScore);
+		}catch(\InvalidArgumentException $invalidArgument) {
+			//rethrow exception
+			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
+		} catch(\RangeException $range) {
+			//rethrow exception
+			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\Exception $exception) {
+			//rethrow exception
+			throw(new \Exception($exception->getMessage(), 0, $exception));
+		}
+	}
 }
