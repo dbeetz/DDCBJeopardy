@@ -227,7 +227,7 @@ class Score {
 	 */
 	public static function getScoreByScoreId(\PDO $pdo, int $scoreId) {
 		//sanitize scoreId before searching
-		if(empty($scoreId)) {
+		if(empty($scoreId) === true) {
 			throw(new \PDOException("Enter a number"));
 		}
 		//create a query template
@@ -271,6 +271,76 @@ class Score {
 
 		//bind to values in template
 		$parameters = ["scoreGameId" => $scoreGameId];
+		$statement->execute($parameters);
+
+		try{
+			$score = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false){
+				$score = new Score($row["scoreId"], $row["scoreGameId"], $row["scoreStudentId"], $row["scoreStudentScore"]);
+			}
+		}catch(\Exception $exception){
+			//rethrow exception
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return $score;
+	}
+	/**
+	 * getScoreByScoreStudentId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $getScoreByScoreStudentId Id to search for
+	 * @throws \TypeError if variables are not the correct data type
+	 * @throws \PDOException if data base error occurs
+	 * @throws \Exception for all other exception
+	 */
+	public static function getScoreByScoreStudentId(\PDO $pdo, int $scoreStudentId){
+		//sanitize scoreStudentId before searching
+		if(empty($scoreStudentId) === true){
+			throw(new \PDOException("Enter a number"));
+		}
+		//create a query template
+		$query = "SELECT scoreId, scoreGameId, scoreStudentId, scoreStudentScore FROM score WHERE scoreStudentId = :scoreStudentId";
+		$statement = $pdo->prepare($query);
+
+		//bind to values in template
+		$parameters = ["scoreStudentId" => $scoreStudentId];
+		$statement->execute($parameters);
+
+		try{
+			$score = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false){
+				$score = new Score($row["scoreId"], $row["scoreGameId"], $row["scoreStudentId"], $row["scoreStudentScore"]);
+			}
+		}catch(\Exception $exception){
+			//rethrow exception
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return $score;
+	}
+	/**
+	 * getScoreByScoreStudentScore
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $getScoreByScoreStudentScore Id to search for
+	 * @throws \TypeError if variables are not the correct data type
+	 * @throws \PDOException if data base error occurs
+	 * @throws \Exception for all other exception
+	 */
+	public static function getScoreByScoreStudentScore(\PDO $pdo, int $scoreStudentScore){
+		//sanitize scoreStudentScore before searching
+		if(empty($scoreStudentScore) === true){
+			throw(new \PDOException("Enter a number"));
+		}
+		//create a query template
+		$query = "SELECT scoreId, scoreGameId, scoreStudentId, scoreStudentScore FROM score WHERE scoreStudentScore = :scoreStudentScore";
+		$statement = $pdo->prepare($query);
+
+		//bind to values in template
+		$parameters = ["scoreStudentScore" => $scoreStudentScore];
 		$statement->execute($parameters);
 
 		try{
