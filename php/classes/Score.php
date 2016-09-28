@@ -172,4 +172,23 @@ class Score{
 		//update scoreId with what sql returns
 		$this->scoreId = intval($pdo->lastInsertId());
 	}
+	/**
+	 * PDO delete function
+	 *
+	 * @param \PDO $pdo
+	 * @throws \PDOException if score is null
+	 */
+	public function delete(\PDO $pdo){
+		//make sure scoreId is not null
+		if($this->scoreId === null){
+			throw(new \PDOException("This Id doesn't exist"));
+		}
+		//create query template
+		$query = "DELETE FROM score WHERE scoreId = :scoreId";
+		$statement = $pdo->prepare($query);
+
+		//bind varables to place holders in template
+		$parameters = ["scoreId" => $this->scoreId];
+		$statement->execute($parameters);
+	}
 }
