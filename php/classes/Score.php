@@ -11,7 +11,7 @@ require_once("autoload.php");
  *
  * @author Robert Engelbert <rob@robertengelbert.com>
  */
-class Score {
+class Score implements \JsonSerializable {
 	/**
 	 * scoreId this is the primary key
 	 *
@@ -355,5 +355,39 @@ class Score {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return $score;
+	}
+	/**
+	 * test getAllScores
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param $getAllScores Id to serach for
+	 * @throws \TypeError if variables are not the correct data type
+	 * @throws \PDOException if data base error occurs
+	 * @throws \Exception for all other exceptions
+	 */
+	public static function getAllScores(\PDO $pdo){
+		//create a query template
+		$query = "SELECT scoreId, scoreGameId, ScoreStudentId, ScoreStudentScore FROM score";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+		//build an array of scores
+		$scores = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false)
+			try{
+			$score = new Score($row["scoreId"], $row["scoreGameId"], $row["scoreStudentId"], $row["scoreStudentScore"]);
+			}catch(\Exception $exception){
+				//rethrow exception
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+			return($score);
+	}
+	/**
+	 * Includes all json serialization fields
+	 *
+	 * @returns array containing all score fields
+	 */
+	public function jsonSerialize(){
+		return (get_object_vars($this));
 	}
 }
