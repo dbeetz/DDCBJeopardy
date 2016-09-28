@@ -11,8 +11,7 @@ require_once("autoload.php");
  *
  * @author Robert Engelbert <rob@robertengelbert.com>
  */
-
-class Score{
+class Score {
 	/**
 	 * scoreId this is the primary key
 	 *
@@ -50,12 +49,12 @@ class Score{
 	 */
 
 	public function __construct(int $newScoreId, int $newScoreGameId, int $newScoreStudentId, int $newScoreStudentScore) {
-		try{
+		try {
 			$this->setScoreId($newScoreId);
 			$this->setScoreGameId($newScoreGameId);
 			$this->setScoreStudentId($newScoreStudentId);
 			$this->setScoreStudentScore($newScoreStudentScore);
-		}catch(\InvalidArgumentException $invalidArgument) {
+		} catch(\InvalidArgumentException $invalidArgument) {
 			//rethrow exception
 			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
 		} catch(\RangeException $range) {
@@ -72,7 +71,7 @@ class Score{
 	 *
 	 * @return int
 	 */
-	public function getScoreId(){
+	public function getScoreId() {
 		return ($this->scoreId);
 	}
 
@@ -83,13 +82,13 @@ class Score{
 	 * @throws \TypeError if variables are not the correct data type
 	 * @throws \RangeException if scoreId is not valid
 	 */
-	public function setScoreId(int $newScoreId){
+	public function setScoreId(int $newScoreId) {
 		//verify scoreId is valid
-		if($newScoreId === null){
+		if($newScoreId === null) {
 			$this->scoreId = null;
 			return;
 		}
-		if($newScoreId <=0){
+		if($newScoreId <= 0) {
 			throw(new \RangeException("ScoreId must be a positive number"));
 		}
 		//convert and store value
@@ -101,9 +100,10 @@ class Score{
 	 *
 	 * @return int
 	 */
-	public function getScoreGameId(){
+	public function getScoreGameId() {
 		return ($this->scoreGameId);
 	}
+
 	/**
 	 * Mutator method for scoreGameId
 	 *
@@ -114,30 +114,33 @@ class Score{
 		//convert and store the value
 		$this->scoreGameId = $scoreGameId;
 	}
+
 	/**
 	 * Accessor method for scoreStudentId
 	 *
 	 * @return int
 	 */
-	public function getScoreStudentId(){
+	public function getScoreStudentId() {
 		return ($this->scoreStudentId);
 	}
+
 	/**
 	 * Mutator method for scoreStudentId
 	 *
 	 * @param $newScoreStudentId
 	 * @throws \TypeError if variables are not the correct data type
 	 */
-	 public function setScoreStudentId(int $scoreStudentId) {
-	 	//convert and store the value
+	public function setScoreStudentId(int $scoreStudentId) {
+		//convert and store the value
 		$this->scoreStudentId = $scoreStudentId;
 	}
+
 	/**
 	 * Accessor method for scoreStudentScore
 	 *
 	 * @return int
 	 */
-	public function getScoreStudentScore(){
+	public function getScoreStudentScore() {
 		return ($this->scoreStudentScore);
 	}
 
@@ -151,14 +154,15 @@ class Score{
 		//convert and store the value
 		$this->scoreStudentScore = $scoreStudentScore;
 	}
+
 	/**
 	 * Insert method
 	 *
 	 * @param \PDO $pdo
 	 * @throws \PDOException if scoreId is not null
 	 */
-	public function insert(\PDO $pdo){
-		if($this->scoreId !== null){
+	public function insert(\PDO $pdo) {
+		if($this->scoreId !== null) {
 			throw(new \PDOException("This is a PDOException"));
 		}
 		//create query template
@@ -172,15 +176,16 @@ class Score{
 		//update scoreId with what sql returns
 		$this->scoreId = intval($pdo->lastInsertId());
 	}
+
 	/**
 	 * PDO delete function
 	 *
 	 * @param \PDO $pdo
 	 * @throws \PDOException if score is null
 	 */
-	public function delete(\PDO $pdo){
+	public function delete(\PDO $pdo) {
 		//make sure scoreId is not null
-		if($this->scoreId === null){
+		if($this->scoreId === null) {
 			throw(new \PDOException("This Id doesn't exist"));
 		}
 		//create query template
@@ -190,5 +195,95 @@ class Score{
 		//bind varables to place holders in template
 		$parameters = ["scoreId" => $this->scoreId];
 		$statement->execute($parameters);
+	}
+
+	/**
+	 * PDO update function
+	 *
+	 * @param \PDO $pdo
+	 * @throws \PDOException if scoreId dose'nt exist
+	 */
+	public function update(\PDO $pdo) {
+		//make sure scoreId is not null
+		if($this->scoreId === null) {
+			throw(new \PDOException("This Id does'nt exist"));
+		}
+		$query = "UPDATE score SET scoreGameId = :scoreGameId, scoreStudentId = :scoreStudentId, scoreStudentScore = :scoreStudentScore WHERE scoreId = :scoreId";
+		$statement = $pdo->prepare($query);
+
+		//bind variables to placeholders in template
+		$parameters = ["scoreGameId" => $this->scoreGameId, "scoreStudentId" => $this->scoreStudentId, "scoreStudentScore" => $this->scoreStudentScore];
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * getScoreByScoreId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $getScoreByScoreId Id to search for
+	 * @throws \TypeError if variables are not the correct data type
+	 * @throws \PDOException if database error occurs
+	 * @throws \Exception for all other exceptions
+	 */
+	public static function getScoreByScoreId(\PDO $pdo, int $scoreId) {
+		//sanitize scoreId before searching
+		if(empty($scoreId)) {
+			throw(new \PDOException("Enter a number"));
+		}
+		//create a query template
+		$query = "SELECT scoreId, scoreGameId, scoreStudentId, scoreStudentScore FROM score WHERE scoreId = :scoreId";
+		$statement = $pdo->prepare($query);
+
+		//bind to values in template
+		$parameters = ["scoreId" => $scoreId];
+		$statement->execute($parameters);
+
+		try{
+			$score = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false){
+				$score = new Score($row["scoreId"], $row["scoreGameId"], $row["scoreStudentId"], $row["scoreStudentScore"]);
+			}
+		}catch(\Exception $exception){
+			//rethrow exception
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return $score;
+	}
+	/**
+	 * getScoreByScoreGameId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $getScoreByScoreGameId Id to search for
+	 * @throws \TypeError if variables are not the correct data type
+	 * @throws \PDOException if data base error occurs
+	 * @throws \Exception for all other exception
+	 */
+	public static function getScoreByScoreGameId(\PDO $pdo, int $scoreGameId){
+		//sanitize scoreGameId before searching
+		if(empty($scoreGameId) === true){
+			throw(new \PDOException("Enter a number"));
+		}
+		//create a query template
+		$query = "SELECT scoreId, scoreGameId, scoreStudentId, scoreStudentScore FROM score WHERE scoreGameId = :scoreGameId";
+		$statement = $pdo->prepare($query);
+
+		//bind to values in template
+		$parameters = ["scoreGameId" => $scoreGameId];
+		$statement->execute($parameters);
+
+		try{
+			$score = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false){
+				$score = new Score($row["scoreId"], $row["scoreGameId"], $row["scoreStudentId"], $row["scoreStudentScore"]);
+			}
+		}catch(\Exception $exception){
+			//rethrow exception
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return $score;
 	}
 }
