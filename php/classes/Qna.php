@@ -230,6 +230,16 @@ class Qna implements \JsonSerializable {
 
 
 
+	/**
+	 * Formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() {
+		$fields = get_object_vars($this);
+		return($fields);
+		// TODO: Implement jsonSerialize() method. do i need to add anything here?
+	}
 
 
 }
