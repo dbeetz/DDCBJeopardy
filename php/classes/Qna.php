@@ -73,6 +73,57 @@ class Qna implements \JsonSerializable {
 		}
 	}
 
+	/*-----------------------------------------Accessor Methods------------------------------------------*/
+
+	/**
+	 * accessor method for qnaId
+	 *
+	 * @return int|null value of qnaId
+	 **/
+	public function getQnaId() {
+		return ($this->qnaId);
+	}
+
+	/**
+	 * accessor method for qnaCategoryId
+	 *
+	 * @return int value of qnaCategoryId
+	 **/
+	public function getQnaCategoryId() {
+		return ($this->qnaCategoryId);
+	}
+
+	/**
+	 * accessor method for qnaAnswer
+	 *
+	 * @return string value for qnaAnswer
+	 **/
+	public function getQnaAnswer() {
+		return ($this->qnaAnswer);
+	}
+
+	/**
+	 * accessor method for qnaPointVal
+	 *
+	 * @return int value of qnaPointVal
+	 **/
+	public function getQnaPointVal() {
+		return ($this->qnaPointVal);
+	}
+
+	/**
+	 * accessor method for qnaQuestion
+	 *
+	 * @return string value for qnaQuestion
+	 **/
+	public function getQnaQuestion() {
+		return ($this->qnaQuestion);
+	}
+
+
+
+
+
 
 
 }
