@@ -37,5 +37,42 @@ class Qna implements \JsonSerializable {
 	private $qnaQuestion;
 
 
+	/*-------------------------------------------Constructor-------------------------------------------------------*/
+
+	/**
+	 * QNA constructor
+	 * @param int|null $newQnaId id of this QNA or null if new QNA
+	 * @param int $newQnaCategoryId id of the Category this QNA is in
+	 * @param string $newQnaAnswer answer for this QNA
+	 * @param int $newQnaPointVal number of points this QNA is worth
+	 * @param string $newQnaQuestion question for this QNA
+	 * @throws \InvalidArgumentException
+	 * @throws \RangeException
+	 * @throws \TypeError
+	 * @throws \Exception
+	 **/
+	public function __construct(int $newQnaId = null, int $newQnaCategoryId, string $newQnaAnswer, int $newQnaPointVal, string $newQnaQuestion) {
+		try {
+			$this->setQnaId($newQnaId);
+			$this->setQnaCategoryId($newQnaCategoryId);
+			$this->setQnaAnswer($newQnaAnswer);
+			$this->setQnaPointVal($newQnaPointVal);
+			$this->setQnaQuestion($newQnaQuestion);
+		} catch(\InvalidArgumentException $invalidArgument) {
+			//rethrow the exception to the caller
+			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
+		} catch(\RangeException $range) {
+			//rethrow the exception to the caller
+			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\TypeError $typeError) {
+			//rethrow the exception to the caller
+			throw(new \TypeError($typeError->getMessage(), 0, $typeError));
+		} catch(\Exception $exception) {
+			//rethrow the exception to the caller
+			throw(new \Exception($exception->getMessage(), 0, $exception));
+		}
+	}
+
+
 
 }
