@@ -34,4 +34,12 @@ class FinalJeopardy implements \JsonSerializable {
 	 * @var int $finalJeopardyStudentId
 	 **/
 	private $finalJeopardyStudentId;
+
+	/**
+	 * Answer for the final jeopardy round
+	 * @var string $finalJeopardyAnswer
+	 **/
+	private $finalJeopardyAnswer;
+
+
 }
