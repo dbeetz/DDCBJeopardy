@@ -39,6 +39,62 @@ class Category implements \JsonSerializable{
 	 *@throws \Exception if some other exception occurs
 	**/
 
-	public function __construct() {
+	public function __construct(int $newCategoryId = null, int $newCategoryGameId = null, string $newCategoryName) {
+		try{
+			$this->setCategoryId($newCategoryId);
+			$this->setCategoryGameId($newCategoryGameId);
+			$this->setCategoryName($newCategoryName);
+		} catch(\InvalidArgumentException $invalidArgument){
+			//rethrow exception to the caller
+			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
+		} catch(\RangeException $range) {
+			//rethrow exception to caller
+			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\TypeError $typeError) {
+			//rethrow the exception to the caller
+			throw(new \TypeError($typeError->getMessage(), 0, $typeError));
+		}catch(\Exception $exception) {
+			//rethrow exception to the caller
+			throw(new \Exception($exception->getMessage(), 0, $exception));
+		}
+	}
+
+	/**
+	 * Accessor method for categoryId
+	 *
+	 * @return int|null value of categoryId
+	**/
+	public function getCategoryId(){
+		return($this->categoryId);
+	}
+
+	/**
+	 * Mutator method for categoryId
+	 *
+	 * @param int $newCategoryId new value of category Id
+	 * @throws \RangeException if $newCateogoryId is not positive
+	 * @throws \TypeError if $newCategoryId is not an integer
+	**/
+
+	public function setCategoryId(int $newCategoryId = null){
+		if($newCategoryId === null){
+			$this->categoryId = null;
+			return;
+		}
+		//verify the category id is positive
+		if($newCategoryId <= 0){
+			throw (new \RangeException("Category ID is not positive"));
+		}
+		//convert and store the category id
+		$this->categoryId = $newCategoryId;
+	}
+
+	/**
+	 * Accessor method for categoryGameId
+	 *
+	 * @return int|null value of categoryGameId
+	**/
+	public function getCategoryGameId(){
+		return($this->categoryGameId);
 	}
 }
