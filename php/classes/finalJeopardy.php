@@ -16,4 +16,12 @@ class FinalJeopardy implements \JsonSerializable {
 	 * @var int $finalJeopardyId
 	 */
 	private $finalJeopardyId;
+
+	/**
+	 * Id identify the final jeopardy & game. This is foreign key from the Game class
+	 * @var string $profileEmail
+	 **/
+	private $finalJeopardyGameId;
+
+
 }
