@@ -1,6 +1,6 @@
 <?php
 
-namespace edu\cnm\DDCBJeopardy
+namespace edu\cnm\DDCBJeopardy;
 require_once("autoload.php");
 
 /**
