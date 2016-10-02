@@ -54,11 +54,14 @@ class FinalJeopardy implements \JsonSerializable {
 	 * @param int|null $newFinalJeopardyGameId of the final jeopardy round or null if new game in the final jeopardy round
 	 * @param int|null $newFinalJeopardyQnaId of the final jeopardy round or null if new qna in the final jeopardy round
 	 * @param int|null $newFinalJeopardyStudentId of the final jeopardy round or null if new student in the final jeopardy round
-	 * @param string $newFinalJeopardyAnswer string containing answer for the final round
+	 * @param string|null $newFinalJeopardyAnswer string containing answer for the final round
 	 * @param int|null $newFinalJeopardyWager int wager for the final round
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
+	public function __construct(int $newFinalJeopardyId = null, int $newFinalJeopardyGameId = null, int $newFinalJeopardyQnaId = null, int $newFinalJeopardyStudentId = null, string $newFinalJeopardyAnswer = null, int $newFinalJeopardyWager = null) {
+
+	}
 }
