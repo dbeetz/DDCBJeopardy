@@ -62,6 +62,19 @@ class FinalJeopardy implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 **/
 	public function __construct(int $newFinalJeopardyId = null, int $newFinalJeopardyGameId = null, int $newFinalJeopardyQnaId = null, int $newFinalJeopardyStudentId = null, string $newFinalJeopardyAnswer = null, int $newFinalJeopardyWager = null) {
-
+		try {
+			$this->setFinalJeopardyId($newFinalJeopardyId);
+			$this->setFinalJeopardyGameId($newFinalJeopardyGameId);
+			$this->setFinalJeopardyQnaId($newFinalJeopardyQnaId);
+			$this->setFinalJeopardyStudentId($newFinalJeopardyStudentId);
+			$this->setFinalJeopardyAnswer($newFinalJeopardyAnswer);
+			$this->setFinalJeopardyWager($newFinalJeopardyWager);
+		} catch(\InvalidArgumentException $invalidArgument) {
+			//rethrow the exception to the caller
+			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
+		} catch(\RangeException $range) {
+			//rethrow exception to caller
+			throw(new \RangeException($range->getMessage(), 0, $range));
+		}
 	}
 }
