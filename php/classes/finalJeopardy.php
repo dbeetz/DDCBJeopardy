@@ -75,6 +75,24 @@ class FinalJeopardy implements \JsonSerializable {
 		} catch(\RangeException $range) {
 			//rethrow exception to caller
 			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\TypeError $typeError) {
+			//rethrow type error exception to caller
+			throw(new \TypeError($typeError->getMessage(), 0, $typeError));
+		} catch(\Exception $exception) {
+			//rethrow regular exception to caller
+			throw(new \Exception($exception->getMessage(), 0, $exception));
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
