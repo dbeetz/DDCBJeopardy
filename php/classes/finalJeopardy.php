@@ -9,3 +9,11 @@ require_once ("autoloader.php");
  * @author Giles Sandoval <gsandoval2277@gmail.com>
  * @version 1.0.0
  */
+
+class FinalJeopardy implements \JsonSerializable {
+	/**
+	 * Id to identify the final jeopardy round. This is primary key
+	 * @var int $finalJeopardyId
+	 */
+	private $finalJeopardyId;
+}
