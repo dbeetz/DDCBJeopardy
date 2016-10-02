@@ -31,14 +31,10 @@ class BadCategoryName implements \JsonSerializable {
 	private $badCategoryNameName;
 
 
+	/*----------------------------GETTERs  and SETTERs for badCategoryName Class-------------------*/
 
 
-
-/*----------------------------GETTERs  and SETTERs for badCategoryName Class-------------------*/
-
-
-
-/*--------SETTER & GETTER for badCategoryNameCategoryId------------------*/
+	/*--------SETTER & GETTER for badCategoryNameCategoryId------------------*/
 	/**
 	 * getter method for badCategoryNameCategoryId
 	 * @return int $badCategoryNameCategoryId
@@ -57,7 +53,7 @@ class BadCategoryName implements \JsonSerializable {
 	 **/
 	public function setBadCategoryNameCategoryId(int $newBadCategoryNameCategoryId) {
 		//verify that the profile id is positive
-		if($newBadCategoryNameCategoryId === null){
+		if($newBadCategoryNameCategoryId === null) {
 			throw(new \InvalidArgumentException("badCategoryNameCategoryId cannot be null"));
 		}
 		if($newBadCategoryNameCategoryId <= 0) {
@@ -88,7 +84,7 @@ class BadCategoryName implements \JsonSerializable {
 	 **/
 	public function setBadCategoryNameGameId(int $newBadCategoryNameGameId) {
 		//verify that the profile id is positive
-		if($newBadCategoryNameGameId === null){
+		if($newBadCategoryNameGameId === null) {
 			throw(new \InvalidArgumentException("badCategoryNameGameId cannot be null"));
 		}
 		if($newBadCategoryNameGameId <= 0) {
@@ -123,18 +119,58 @@ class BadCategoryName implements \JsonSerializable {
 		$newBadCategoryNameName = filter_input($newBadCategoryNameName, FILTER_SANITIZE_STRING);
 
 		/*check if $newBadCategoryNameName is either empty or too long */
-		if(strlen($newBadCategoryNameName) === 0){
+		if(strlen($newBadCategoryNameName) === 0) {
 			throw(new \RangeException("Bad category name is empty"));
 		}
 
-		if(strlen($newBadCategoryNameName) > 128){
+		if(strlen($newBadCategoryNameName) > 128) {
 			throw(new \RangeException("Bad category name is too long!"));
 		}
 
 		/*everything checks out, assign badCategoryNameName to $newBadCategoryNameName */
 		$this->badCategoryNameName = $newBadCategoryNameName;
+	}
+
+
+	/*-------------PDO/SQL Methods-----------------------*/
+
+	/**
+	 * inserts this badCategoryName into mySQL
+	 *
+	 * @param \PDO $pdo is the PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 *
+	 **/
+
+	public function insert(\PDO $pdo) {
+
+		if($this->badCategoryNameCategoryId === null || $this->badCategoryNameGameId === null) {
+			throw(new \InvalidArgumentException("The foreign key cannot be null!"));
+		}
+		if($this->badCategoryNameName === null) {
+			throw(new \InvalidArgumentException("The 'Bad Category Name' cannot be null!"));
+		}
+
+		/*----Create query template-----*/
+		$query = "INSERT INTO badCategoryName(badCategoryNameCategoryId, badCategoryNameGameId, badCategoryNameName) VALUES(:badCategoryNameCategoryId, :badCategoryNameGameId, :badCategoryNameName)";
+
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["badCategoryNameCategoryId"=>$this->badCategoryNameCategoryId, "badCategoryNameGameId"=>$this->badCategoryNameGameId,];
+
+		$statement->execute($parameters);
 
 	}
 
 
+
 }
+
+
+
+
+
+
+
+
