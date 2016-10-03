@@ -65,6 +65,58 @@ class Game implements \JsonSerializable {
 	* @throws \TypeError if data types violate type hints
 	* @throws \Exception if some other exception occurs
 	**/
+	public function __construct(int $newGameId = null, int $newGameStudentId, int $newGameDailyDoubleId, $newGameDateTime = null, int $newGameFinalJeopardyId) {
+		try {
+			$this->setGameId($newGameId);
+			$this->setGameStudentId($newGameStudentId);
+			$this->setGameDailyDoubleId($newGameDailyDoubleId);
+			$this->setGameDateTime($newGameDateTime);
+			$this->setGameFinalJeopardyId($newGameFinalJeopardyId);
+		} catch(\InvalidArgumentException $invalidArgument) {
+			//rethrow the exception to the caller
+			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
+		} catch(\RangeException $range) {
+			//rethrow the exception to the caller
+			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\TypeError $typeError) {
+			//rethrow the exception to the caller
+			throw(new \TypeError($typeError->getMessage(), 0, $typeError));
+		} catch(\Exception $exception) {
+			//rethrow the exception to the caller
+			throw(new \Exception($exception->getMessage(), 0, $exception));
+		}
+	}
 
-	
+	/**
+	* accessor method for the game id
+	*
+	* @return int|null value of game id
+	**/
+	public function getGameId() {
+		return($this->gameId);
+	}
+
+	/**
+	* mutator method for the game id
+	*
+	* @param int|null $newGameId new value of game id
+	* @throws \RangeException if $newGameId is not positive
+	* @throws \TypeError if $newGameId is not an integer
+	**/
+	public function setGameId() {
+		//base case: if the game id is null, then this is a new game without a MySQL assigned id yet
+		if($newGameId === null) {
+			$this->gameId = null;
+			return;
+		}
+
+		//verify the game id is positive
+		if($newGameId <= 0) {
+			throw(new \RangeException("game id is not positive"));
+		}
+
+		//convert and store the game id
+		$this->gameId = $newGameId;
+	}
+
 }
