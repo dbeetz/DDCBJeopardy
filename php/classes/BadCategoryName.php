@@ -127,8 +127,16 @@ class BadCategoryName implements \JsonSerializable {
 			throw(new \RangeException("Bad category name is too long!"));
 		}
 
-		/*everything checks out, assign badCategoryNameName to $newBadCategoryNameName */
-		$this->badCategoryNameName = $newBadCategoryNameName;
+		$nameCheck = "SELECT badCategoryNameCategoryId AND badCategoryNameGameId FROM badCategoryName WHERE badCategoryNameName = :newBadCategoryNameName";
+
+		if(mysql_num_rows($nameCheck) === 0){
+			/*everything checks out, assign badCategoryNameName to $newBadCategoryNameName */
+			$this->badCategoryNameName = $newBadCategoryNameName;
+		}else{
+			throw(new \InvalidArgumentException("You have already used that bad category name Dylan, be more clever!"));
+		}
+
+
 	}
 
 
@@ -154,6 +162,36 @@ class BadCategoryName implements \JsonSerializable {
 
 		/*----Create query template-----*/
 		$query = "INSERT INTO badCategoryName(badCategoryNameCategoryId, badCategoryNameGameId, badCategoryNameName) VALUES(:badCategoryNameCategoryId, :badCategoryNameGameId, :badCategoryNameName)";
+
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["badCategoryNameCategoryId"=>$this->badCategoryNameCategoryId, "badCategoryNameGameId"=>$this->badCategoryNameGameId,];
+
+		$statement->execute($parameters);
+	}
+
+
+
+	/**
+	 * deletes this badCategoryName from mySQL
+	 *
+	 * @param \PDO $pdo is the PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 *
+	 **/
+
+	public function delete(\PDO $pdo) {
+
+		if($this->badCategoryNameCategoryId === null || $this->badCategoryNameGameId === null) {
+			throw(new \InvalidArgumentException("Cannot delete a name that doesnt exist!"));
+		}
+		if($this->badCategoryNameName === null) {
+			throw(new \InvalidArgumentException("The 'Bad Category Name' does not exist!"));
+		}
+
+		/*----Create query template-----*/
+		$query = "DELETE FROM badCategoryName WHERE badCategoryNameCategoryId = :badCategoryNameCategoryId AND badCategoryNameGameId = :badCategoryNameGameId";
 
 		$statement = $pdo->prepare($query);
 
