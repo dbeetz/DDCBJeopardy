@@ -368,6 +368,46 @@ class Qna implements \JsonSerializable {
 
 
 	/**
+	 * get the qna by qnaCategoryId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $qnaCategoryId qna category id to search by
+	 * @return \SplFixedArray SplFixedArray of QNAs found
+	 * @throws \PDOException when mysql related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 * @throws \RangeException when out of range
+	 **/
+	public static function getQnaByQnaCategoryId(\PDO $pdo, int $qnaCategoryId){
+		//sanitize the category id before searching by making sure it's positive
+		if($qnaCategoryId <= 0){
+			throw(new \RangeException("qna category id must be positive"));
+		}
+		//create query template
+		$query = "SELECT qnaId, qnaCategoryId, qnaAnswer, qnaPointVal, qnaQuestion FROM qna WHERE qnaCategoryId = :qnaCategoryId";
+		$statement = $pdo->prepare($query);
+
+		//bind the qna category id to the placeholder in the template
+		$parameters = ["qnaCategoryId"=>$qnaCategoryId];
+		$statement->execute($parameters);
+
+		//build an array of QNAs
+		$qnas = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false){
+			try{
+				$qna = new Qna($row["qnaId"], $row["qnaCategoryId"], $row["qnaAnswer"], $row["qnaPointVal"], $row["qnaQuestion"]);
+				$qnas[$qnas->key()] = $qna;
+				$qnas->next();
+			}catch(\Exception $exception){
+				//if the row couldn't be converted rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($qnas);
+	}
+
+
+	/**
 	 * Formats the state variables for JSON serialization
 	 *
 	 * @return array resulting state variables to serialize
