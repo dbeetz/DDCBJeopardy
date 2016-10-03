@@ -129,10 +129,10 @@ class BadCategoryName implements \JsonSerializable {
 
 		$nameCheck = "SELECT badCategoryNameCategoryId AND badCategoryNameGameId FROM badCategoryName WHERE badCategoryNameName = :newBadCategoryNameName";
 
-		if(mysql_num_rows($nameCheck) === 0){
+		if(mysql_num_rows($nameCheck) === 0) {
 			/*everything checks out, assign badCategoryNameName to $newBadCategoryNameName */
 			$this->badCategoryNameName = $newBadCategoryNameName;
-		}else{
+		} else {
 			throw(new \InvalidArgumentException("You have already used that bad category name Dylan, be more clever!"));
 		}
 
@@ -165,11 +165,10 @@ class BadCategoryName implements \JsonSerializable {
 
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["badCategoryNameCategoryId"=>$this->badCategoryNameCategoryId, "badCategoryNameGameId"=>$this->badCategoryNameGameId,];
+		$parameters = ["badCategoryNameCategoryId" => $this->badCategoryNameCategoryId, "badCategoryNameGameId" => $this->badCategoryNameGameId,];
 
 		$statement->execute($parameters);
 	}
-
 
 
 	/**
@@ -195,12 +194,91 @@ class BadCategoryName implements \JsonSerializable {
 
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["badCategoryNameCategoryId"=>$this->badCategoryNameCategoryId, "badCategoryNameGameId"=>$this->badCategoryNameGameId,];
+		$parameters = ["badCategoryNameCategoryId" => $this->badCategoryNameCategoryId, "badCategoryNameGameId" => $this->badCategoryNameGameId,];
 
 		$statement->execute($parameters);
 
 	}
 
+
+	/*-------------Get Foo by Bar Section----------------------*/
+
+	/**
+	 * get badCategoryName by badCategoryNameCategoryId
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $badCategoryNameCategoryId is the composite key to search for
+	 * @return \SplFixedArray SplFixedArray of badCategoryName's found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public function getBadCategoryNameByBadCategoryNameCategoryId(\PDO $pdo, int $badCategoryNameCategoryId) {
+//		Sanitize input, check for bad values
+		if($badCategoryNameCategoryId <= 0) {
+			throw(new \PDOException("badCategoryNameCategoryId cannot be negative or 0"));
+		}
+
+		$query = "SELECT badCategoryNameCategoryId, badCategoryNameGameId, badCategoryNameName FROM badCategoryName WHERE badCategoryNameCategoryId = :badCategoryNameCategoryId";
+
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["badCategoryNameCategoryId"=> $badCategoryNameCategoryId];
+
+		$statement->execute($parameters);
+
+		//build an array of badCategoryNames...
+		$badCategoryNames = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$badCategoryName = new BadCategoryName($row["badCategoryNameCategoryId"],$row["badCategoryNameGameId"], $row["badCategoryNameName"]);
+				$badCategoryNames[$badCategoryNames->key()] = $badCategoryName;
+				$badCategoryNames->next();
+			} catch(\Exception $exception) {
+				//if the row couldn't be converted rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($badCategoryNames);
+	}
+
+
+	/**
+	 * get badCategoryName by badCategoryNameGameId
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $badCategoryNameGameId is the composite key to search for
+	 * @return \SplFixedArray SplFixedArray of badCategoryName's found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public function getBadCategoryNameByBadCategoryNameGameId(\PDO $pdo, int $badCategoryNameGameId) {
+//		Sanitize input, check for bad values
+		if($badCategoryNameGameId <= 0) {
+			throw(new \PDOException("badCategoryNameGameId cannot be negative or 0"));
+		}
+
+		$query = "SELECT badCategoryNameCategoryId, badCategoryNameGameId, badCategoryNameName FROM badCategoryName WHERE badCategoryNameGameId = :badCategoryNameGameId";
+
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["badCategoryNameGameId"=> $badCategoryNameGameId];
+
+		$statement->execute($parameters);
+
+		//build an array of badCategoryNames...
+		$badCategoryNames = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$badCategoryName = new BadCategoryName($row["badCategoryNameCategoryId"],$row["badCategoryNameGameId"], $row["badCategoryNameName"]);
+				$badCategoryNames[$badCategoryNames->key()] = $badCategoryName;
+				$badCategoryNames->next();
+			} catch(\Exception $exception) {
+				//if the row couldn't be converted rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($badCategoryNames);
+	}
 
 
 }
