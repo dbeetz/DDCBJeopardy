@@ -337,6 +337,35 @@ class Qna implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
+	public static function getQnaByQnaId(\PDO $pdo, int $qnaId){
+		//sanitize the qnaId before searching by checking that it is a positive numbere
+		if($qnaId <= 0){
+			throw(new \PDOException("qnaId is not positive"));
+		}
+		//create query template
+		$query = "SELECT qnaId, qnaCategoryId, qnaAnswer, qnaPointVal, qnaQuestion FROM qna WHERE qnaId = :qnaId";
+		$statement = $pdo->prepare($query);
+
+		//bind the qna id to the placeholder in the template
+		$parameters = ["qnaId" => $qnaId];
+		$statement->execute($parameters);
+
+		//grab the even from mySQL
+		try{
+			$qna = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+
+			if($row !== false){
+				$qna = new Qna($row["qnaId"], $row["qnaCategoryId"], $row["qnaAnswer"], $row["qnaPointVal"], $row["qnaQuestion"]);
+			}
+		}catch(\Exception $exception){
+			//if the row couldn't be converted rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($qna);
+	}
+
 
 	/**
 	 * Formats the state variables for JSON serialization
