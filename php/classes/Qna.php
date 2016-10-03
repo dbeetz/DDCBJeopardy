@@ -191,15 +191,37 @@ class Qna implements \JsonSerializable {
 	/**
 	 * mutator method for qnaPointVal
 	 * @param int $newQnaPointVal is the new value of qnaPointVal
-	 * @throws
+	 * @throws \RangeException if $newQnaPointVal is empty or too long
+	 * @throws \TypeError if $newQnaPointVal is not an int
 	 **/
+
+	public function setQnaPointVal(int $newQnaPointVal){
+		//strip out white space on either end of qnaPointVal
+		$newQnaPointVal = trim($newQnaPointVal);
+
+		//sanitize $newQnaPointVal
+		$newQnaPointVal = filter_var($newQnaPointVal, FILTER_SANITIZE_NUMBER_INT); //idk if i do this here, or how i would do this
+
+		//verify if $newQnaPointVal is positive
+		if($newQnaPointVal <= 0){
+			throw(new \RangeException("The qnaPointVal must be positive"));
+		}
+
+		//check if $newQnaPointVal is too long
+		if($newQnaPointVal > 32){
+			throw(new \RangeException("The qnaPointVal cannot be greater than 32"));
+		}
+
+
+	}
+
+
 
 
 	/**
 	 * mutator method for qnaQuestion
 	 * @param string $newQnaQuestion is the new value of qnaQuestion
 	 * @throws \RangeException if $newQnaQuestion is empty or too long
-	 * @throws \InvalidArgumentException if $newQnaQuestion is not a string
 	 * @throws \TypeError if $newQnaQuestion is not a string
 	 **/
 	public function setQnaQuestion(string $newQnaQuestion) {
