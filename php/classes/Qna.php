@@ -298,6 +298,46 @@ class Qna implements \JsonSerializable {
 	}
 
 
+
+	/*-------------------------------------UPDATE---------------------*/
+	/**
+	 * updates this QNA in mySQL
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException if mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) {
+		//enforce the qnaId is not null(i.e. don't update an event that hasn't been inserted
+		if($this->qnaId === null) {
+			throw(new \PDOException("unable to update a QNA that does not exist"));
+		}
+		//create a query template
+		$query = "UPDATE qna SET qnaCategoryId = :qnaCategoryId, qnaAnswer = :qnaAnswer, qnaPointVal = :qnaPointVal, qnaQuestion = :qnaQuestion WHERE qnaId = :qnaId";
+
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the place holders in the template
+
+		$parameters = ["qnaCategoryId" => $this->qnaCategoryId, "qnaAnswer" => $this->qnaAnswer, "qnaPointVal" => $this->qnaPointVal, "qnaQuestion" => $this->qnaQuestion, "qnaId" => $this->qnaId];
+		$statement->execute($parameters);
+
+	}
+
+
+
+	/*----------------------------------------------Get Foo By Bars--------------------------------------------*/
+
+
+	/**
+	 * gets the QNA by qnaId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $qnaId qnaId to search for
+	 * @return qna|null qna found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+
 	/**
 	 * Formats the state variables for JSON serialization
 	 *
