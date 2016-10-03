@@ -116,7 +116,7 @@ class BadCategoryName implements \JsonSerializable {
 	public function setBadCategoryNameName(string $newBadCategoryNameName) {
 		/*strip out all white space, and sanitize*/
 		$newBadCategoryNameName = trim($newBadCategoryNameName);
-		$newBadCategoryNameName = filter_input($newBadCategoryNameName, FILTER_SANITIZE_STRING);
+		$newBadCategoryNameName = filter_var($newBadCategoryNameName, FILTER_SANITIZE_STRING);
 
 		/*check if $newBadCategoryNameName is either empty or too long */
 		if(strlen($newBadCategoryNameName) === 0) {
@@ -221,7 +221,7 @@ class BadCategoryName implements \JsonSerializable {
 
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["badCategoryNameCategoryId"=> $badCategoryNameCategoryId];
+		$parameters = ["badCategoryNameCategoryId" => $badCategoryNameCategoryId];
 
 		$statement->execute($parameters);
 
@@ -230,7 +230,7 @@ class BadCategoryName implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$badCategoryName = new BadCategoryName($row["badCategoryNameCategoryId"],$row["badCategoryNameGameId"], $row["badCategoryNameName"]);
+				$badCategoryName = new BadCategoryName($row["badCategoryNameCategoryId"], $row["badCategoryNameGameId"], $row["badCategoryNameName"]);
 				$badCategoryNames[$badCategoryNames->key()] = $badCategoryName;
 				$badCategoryNames->next();
 			} catch(\Exception $exception) {
@@ -260,7 +260,7 @@ class BadCategoryName implements \JsonSerializable {
 
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["badCategoryNameGameId"=> $badCategoryNameGameId];
+		$parameters = ["badCategoryNameGameId" => $badCategoryNameGameId];
 
 		$statement->execute($parameters);
 
@@ -269,7 +269,7 @@ class BadCategoryName implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$badCategoryName = new BadCategoryName($row["badCategoryNameCategoryId"],$row["badCategoryNameGameId"], $row["badCategoryNameName"]);
+				$badCategoryName = new BadCategoryName($row["badCategoryNameCategoryId"], $row["badCategoryNameGameId"], $row["badCategoryNameName"]);
 				$badCategoryNames[$badCategoryNames->key()] = $badCategoryName;
 				$badCategoryNames->next();
 			} catch(\Exception $exception) {
@@ -278,6 +278,58 @@ class BadCategoryName implements \JsonSerializable {
 			}
 		}
 		return ($badCategoryNames);
+	}
+
+
+	/**
+	 * get badCategoryName by badCategoryNameName
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $badCategoryNameName is the composite key to search for
+	 * @return BadCategoryName|null for object found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public function getBadCategoryNameByBadCategoryNameName(\PDO $pdo, string $badCategoryNameName) {
+//		Sanitize input, check for bad values
+		$badCategoryNameName = trim($badCategoryNameName);
+		$badCategoryNameName = filter_var($badCategoryNameName, FILTER_SANITIZE_STRING);
+
+
+//		DO WE WANT TO FIND AN EXACT MATCH TO THE NAME OR AN ARRAY OF MATCHES??
+		if(empty($badCategoryNameName) === true) {
+			throw(new \InvalidArgumentException("Must enter a name to search for!"));
+		}
+
+		if(strlen($badCategoryNameName) > 128) {
+			throw(new \RangeException("The name entered cannot be longer than 128 characters"));
+		}
+
+		$query = "SELECT badCategoryNameCategoryId, badCategoryNameGameId, badCategoryNameName FROM badCategoryName WHERE badCategoryNameName = :badCategoryNameName";
+
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["badCategoryNameName" => $badCategoryNameName];
+
+		$statement->execute($parameters);
+
+//		Now that we have selected the correct profile, we need to grab it from SQL
+		try {
+			$badCategoryName = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+
+			if($row !== false){
+				$badCategoryName = new BadCategoryName($row["badCategoryNameCategoryId"], $row["badCategoryNameGameId"], $row["badCategoryNameName"]);
+			}
+
+		}catch(\Exception $exception){
+//			if row couldnt be converted, throw PDO $exception
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		return $badCategoryName;
+
+
 	}
 
 
