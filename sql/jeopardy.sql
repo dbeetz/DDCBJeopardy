@@ -135,7 +135,6 @@ CREATE TABLE gameQna (
 	PRIMARY KEY(gameQnaId)
 );
 
-
 CREATE TABLE score (
 	scoreGameQnaId INT UNSIGNED NOT NULL,
 	scorePlayerId INT UNSIGNED NOT NULL,
