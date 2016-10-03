@@ -119,4 +119,114 @@ class Game implements \JsonSerializable {
 		$this->gameId = $newGameId;
 	}
 
+	/**
+	* accessor method for the game student id
+	*
+	* @return int value of game student id
+	**/
+	public function getGameStudentId() {
+		return($this->getGameStudentId);
+	}
+
+	/**
+	* mutator method for the game student id
+	*
+	* @param int $newGameStudentId new value of game student id
+	* @throws \RangeException if $newGameStudentId is not positive
+	* @throws \TypeError if $newGameStudentId is not an integer
+	**/
+	public function setGameStudentId() {
+		//verify the game student id is positive
+		if($newGameStudentId <= 0) {
+			throw(new \RangeException("game student id is not positive"));
+		}
+
+		//convert and store the game student id
+		$this->gameStudentId = $newGameStudentId;
+	}
+
+	/**
+	* accessor method for the game daily double id
+	*
+	* @return int value of game daily double id
+	**/
+	public function getGameDailyDoubleId() {
+		return($this->getGameDailyDoubleId);
+	}
+
+	/**
+	* mutator method for the game daily double id
+	*
+	* @param int $newGameDailyDoubleId new value of game daily double id
+	* @throws \RangeException if $newGameDailyDoubleId is not positive
+	* @throws \TypeError if $newGameDailyDoubleId is not an integer
+	**/
+	public function setGameDailyDoubleId() {
+		//verify the game daily double id is positive
+		if($newGameDailyDoubleId <= 0) {
+			throw(new \RangeException("game daily double id is not positive"));
+		}
+
+		//convert and store the game daily double id
+		$this->gameDailyDoubleId = $newGameDailyDoubleId;
+	}
+
+	/**
+	 * accessor method for the Game date and time
+	 *
+	 * @return \DateTime value of the Game date and time
+	 **/
+	public function getGameDateTime() {
+		return($this->gameDateTime);
+	}
+	/**
+	 * mutator method for the Game date and time
+	 *
+	 * @param \DateTime|string|null $newGameDateTime game date and time as a DateTime object, or null to load the current time
+	 * @throws \InvalidArgumentException if $newGameDateTime is not a valid object or string
+	 * @throws \RangeException if $newGameDateTime is a date that does not exist
+	 **/
+	public function setGameDateTime($newGameDateTime = null) {
+		//base case: if the date and time are null, use the current date and time
+		if($newGameDateTime === null) {
+			$this->gameDateTime = new \DateTime();
+			return;
+		}
+		//store the game date and time
+		try {
+			$newGameDateTime = self::validateDateTime($newGameDateTime);
+		} catch(\InvalidArgumentException $invalidArgument) {
+			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
+		} catch(\RangeException $range) {
+			throw(new \RangeException($range->getMessage(), 0, $range));
+		}
+		$this->gameDateTime =$newGameDateTime;
+	}
+
+	/**
+	* accessor method for the game final jeopardy id
+	*
+	* @return int value of game final jeopardy id
+	**/
+	public function getGameFinalJeopardyId() {
+		return($this->getGameFinalJeopardyId);
+	}
+
+	/**
+	* mutator method for the game final jeopardy id
+	*
+	* @param int $newGameFinalJeopardyId new value of game final jeopardy id
+	* @throws \RangeException if $newGameFinalJeopardyId is not positive
+	* @throws \TypeError if $newGameFinalJeopardyId is not an integer
+	**/
+	public function setGameFinalJeopardyId() {
+		//verify the game final jeopardy id is positive
+		if($newGameFinalJeopardyId <= 0) {
+			throw(new \RangeException("game final jeopardy id is not positive"));
+		}
+
+		//convert and store the game final jeopardy id
+		$this->gameFinalJeopardyId = $newGameFinalJeopardyId;
+	}
+
 }
