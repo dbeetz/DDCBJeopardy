@@ -50,4 +50,21 @@ class Game implements \JsonSerializable {
 	* @var int $gameFinalJeopardyId
 	**/
 	private $gameFinalJeopardyId;
+
+	/**
+	*
+	* constructor for this Game
+	*
+	* @param int|null $newGameId id of this Game or null if a new Game
+	* @param int $newGameStudentId id of the students playing the Game
+	* @param int $newGameDailyDoubleId id of the daily double of the Game
+	* @param \DateTime|string|null $newGameDateTime date and time of the Game, or null if set to the current date and time
+	* @param int $newGameFinalJeopardyId id of the final jeopardy of the Game
+	* @throws \InvalidArgumentException if data types are not valid
+	* @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	* @throws \TypeError if data types violate type hints
+	* @throws \Exception if some other exception occurs
+	**/
+
+	
 }
