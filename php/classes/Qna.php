@@ -275,6 +275,27 @@ class Qna implements \JsonSerializable {
 
 	}
 
+	/*---------------------------DELETE-----------------------------*/
+	/**
+	 * deletes this QNA from mySQL
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) {
+		//enforce the qnaID is not null (i.e. don't delete a tweet that hasn't been inserted)
+		if($this->qnaId === null) {
+			throw(new \PDOException("unable to delete a QNA that does not exist"));
+		}
+
+		//create a query template
+		$query = "DELETE FROM qna WHERE qnaId = :qnaId";
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the place holder in the template
+		$parameters = ["qnaId" => $this->qnaId];
+		$statement->execute($parameters);
+	}
 
 
 	/**
