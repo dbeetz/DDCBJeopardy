@@ -195,7 +195,7 @@ class Qna implements \JsonSerializable {
 	 * @throws \TypeError if $newQnaPointVal is not an int
 	 **/
 
-	public function setQnaPointVal(int $newQnaPointVal){
+	public function setQnaPointVal(int $newQnaPointVal) {
 		//strip out white space on either end of qnaPointVal
 		$newQnaPointVal = trim($newQnaPointVal);
 
@@ -203,12 +203,12 @@ class Qna implements \JsonSerializable {
 		$newQnaPointVal = filter_var($newQnaPointVal, FILTER_SANITIZE_NUMBER_INT); //idk if i do this here, or how i would do this
 
 		//verify if $newQnaPointVal is positive
-		if($newQnaPointVal <= 0){
+		if($newQnaPointVal <= 0) {
 			throw(new \RangeException("The qnaPointVal must be positive"));
 		}
 
 		//check if $newQnaPointVal is too long
-		if($newQnaPointVal > 32){
+		if($newQnaPointVal > 32) {
 			throw(new \RangeException("The qnaPointVal cannot be greater than 32"));
 		}
 
@@ -217,8 +217,6 @@ class Qna implements \JsonSerializable {
 
 
 	}
-
-
 
 
 	/**
@@ -235,12 +233,12 @@ class Qna implements \JsonSerializable {
 		$newQnaQuestion = filter_var($newQnaQuestion, FILTER_SANITIZE_STRING);
 
 		//check if $newQnaQuestion is empty
-		if(strlen($newQnaQuestion) === 0){
+		if(strlen($newQnaQuestion) === 0) {
 			throw(new \RangeException("Must enter a QNA question"));
 		}
 
 		//check if $newQnaQuestion is too long
-		if(strlen($newQnaQuestion) > 256){
+		if(strlen($newQnaQuestion) > 256) {
 			throw(new \RangeException("qnaQuestion is too long"));
 		}
 
@@ -249,9 +247,33 @@ class Qna implements \JsonSerializable {
 	}
 
 
-	/*----------------------------------------------Get Foo By Bars--------------------------------------------*/
+	/*---------------------------------------INSERT---------------------------*/
+	/**
+	 * Inserts this QNA into mySQL
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) {
+		//enforce the qnaId is null(i.e. don't insert a QNA that already exists)
+		if($this->qnaId !== null) {
+			throw(new \PDOException("not a new QNA"));
+		}
+		//create query template
+		$query = "INSERT INTO qna(qnaCategoryId, qnaAnswer, qnaPointVal, qnaQuestion) VALUES(:qnaCategoryId, :qnaAnswer, :qnaPointVal, :qnaQuestion)";
+
+		$statement = $pdo->prepare($query);
+
+		//bind the member variables to the placeholders in the template
+		$parameters = ["qnaCategoryId" => $this->qnaCategoryId, "qnaAnswer" => $this->qnaAnswer, "qnaPointVal" => $this->qnaPointVal, "qnaQuestion" => $this->qnaQuestion];
+
+		$statement->execute($parameters);
+
+		//update the null qnaId with what mySQL just gave us
+		$this->qnaId = intval($pdo->lastInsertId());
 
 
+	}
 
 
 
@@ -262,7 +284,7 @@ class Qna implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
-		return($fields);
+		return ($fields);
 		// TODO: Implement jsonSerialize() method. do i need to add anything here?
 	}
 
