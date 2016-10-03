@@ -212,6 +212,9 @@ class Qna implements \JsonSerializable {
 			throw(new \RangeException("The qnaPointVal cannot be greater than 32"));
 		}
 
+		//convert and store the qnaPointVal
+		$this->qnaPointVal = $newQnaPointVal;
+
 
 	}
 
