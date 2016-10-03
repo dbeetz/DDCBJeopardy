@@ -1,16 +1,15 @@
-# DROP TABLE IF EXISTS finalJeopardy;
+# DROP TABLE IF EXISTS score;
 # DROP TABLE IF EXISTS gameQna;
 # DROP TABLE IF EXISTS badCategoryName;
 # DROP TABLE IF EXISTS qna;
 # DROP TABLE IF EXISTS category;
-# DROP TABLE IF EXISTS score;
+# DROP TABLE IF EXISTS player;
 # DROP TABLE IF EXISTS game;
-# DROP TABLE IF EXISTS comment;
-# DROP TABLE IF EXISTS alert;
-# DROP TABLE IF EXISTS student;
-# DROP TABLE IF EXISTS cohort;
 # DROP TABLE IF EXISTS attendance;
-
+# DROP TABLE IF EXISTS comment;
+# DROP TABLE IF EXISTS student;
+# DROP TABLE IF EXISTS alert;
+# DROP TABLE IF EXISTS cohort;
 
 CREATE TABLE cohort (
 	cohortId INT UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -77,33 +76,28 @@ CREATE TABLE attendance (
 
 CREATE TABLE game (
 	gameId INT UNSIGNED AUTO_INCREMENT NOT NULL,
-	gameStudentId CHAR(9) NOT NULL,
 	gameDailyDoubleId INT UNSIGNED NOT NULL,
 	gameDateTime DATETIME NOT NULL,
 	gameFinalJeopardyId INT UNSIGNED NOT NULL,
-	INDEX(gameStudentId),
-	FOREIGN KEY(gameStudentId) REFERENCES student(studentId),
 	PRIMARY KEY(gameId)
 );
 
-CREATE TABLE score (
-	scoreId INT UNSIGNED AUTO_INCREMENT NOT NULL,
-	scoreGameId INT UNSIGNED,
-	scoreStudentId CHAR(9) NOT NULL,
-	scoreStudentScore INT SIGNED,
-	INDEX(scoreGameId),
-	INDEX(scoreStudentId),
-	FOREIGN KEY(scoreGameId) REFERENCES game(gameId),
-	FOREIGN KEY(scoreStudentId) REFERENCES student(studentId),
-	PRIMARY KEY(scoreId)
+CREATE TABLE player (
+	playerId INT UNSIGNED AUTO_INCREMENT NOT NULL,
+	playerGameId INT UNSIGNED NOT NULL,
+	playerStudentId CHAR(9) NOT NULL,
+	playerStudentCohortId INT UNSIGNED NOT NULL,
+	INDEX(playerGameId),
+	INDEX(playerStudentId, playerStudentCohortId),
+	FOREIGN KEY(playerGameId) REFERENCES game(gameId),
+	FOREIGN KEY(playerStudentId) REFERENCES student(studentId),
+	FOREIGN KEY(playerStudentCohortId) REFERENCES student(studentCohortId),
+	PRIMARY KEY(playerId)
 );
 
 CREATE TABLE category(
 	categoryId INT UNSIGNED AUTO_INCREMENT NOT NULL,
-	categoryGameId INT UNSIGNED,
 	categoryName VARCHAR(128) NOT NULL,
-	INDEX(categoryGameId),
-	FOREIGN KEY (categoryGameId) REFERENCES game(gameId),
 	PRIMARY KEY(categoryId)
 );
 
@@ -131,27 +125,25 @@ CREATE TABLE badCategoryName (
 );
 
 CREATE TABLE gameQna (
+	gameQnaId INT UNSIGNED AUTO_INCREMENT NOT NULL,
 	gameQnaGameId INT UNSIGNED NOT NULL,
 	gameQnaQnaId INT UNSIGNED NOT NULL,
 	INDEX(gameQnaGameId),
 	INDEX(gameQnaQnaId),
 	FOREIGN KEY(gameQnaGameId) REFERENCES game(gameId),
 	FOREIGN KEY(gameQnaQnaId) REFERENCES qna(qnaId),
-	PRIMARY KEY(gameQnaGameId, gameQnaQnaId)
+	PRIMARY KEY(gameQnaId)
 );
 
-CREATE TABLE finalJeopardy (
-	finalJeopardyId INT UNSIGNED AUTO_INCREMENT NOT NULL,
-	finalJeopardyGameId INT UNSIGNED NOT NULL,
-	finalJeopardyStudentId CHAR(9) NOT NULL,
-	finalJeopardyQnaId INT UNSIGNED NOT NULL,
-	finalJeopardyAnswer VARCHAR(256) NOT NULL,
-	finalJeopardyWager INT UNSIGNED NOT NULL,
-	INDEX(finalJeopardyGameId),
-	INDEX(finalJeopardyStudentId),
-	INDEX(finalJeopardyQnaId),
-	FOREIGN KEY(finalJeopardyGameId) REFERENCES game(gameId),
-	FOREIGN KEY(finalJeopardyStudentId) REFERENCES student(studentId),
-	FOREIGN KEY(finalJeopardyQnaId) REFERENCES qna(qnaId),
-	PRIMARY KEY(finalJeopardyId)
+
+CREATE TABLE score (
+	scoreGameQnaId INT UNSIGNED NOT NULL,
+	scorePlayerId INT UNSIGNED NOT NULL,
+	scoreFinalJeopardyAnswer VARCHAR(128),
+	scoreVal INT SIGNED,
+	INDEX(scoreGameQnaId),
+	INDEX(scorePlayerId),
+	FOREIGN KEY(scoreGameQnaId) REFERENCES gameQna(gameQnaId),
+	FOREIGN KEY(scorePlayerId) REFERENCES player(playerId),
+	PRIMARY KEY(scoreGameQnaId, scorePlayerId)
 );
