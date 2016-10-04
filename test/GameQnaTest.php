@@ -1,8 +1,8 @@
 <?php
 
-namespace Edu\Cnm\Jeopardy\Test;
+namespace Edu\Cnm\DDCBJeopardy\Test;
 
-//use Edu\Cnm\Jeopardy\{GameQna, Game, Qna};
+use Edu\Cnm\DDCBJeopardy\{Game, Qna, Category};
 
 // grab the project test parameters
 require_once("JeopardyTest.php");
@@ -27,10 +27,22 @@ class GameQnaTest extends JeopardyTest {
 	protected $game = null;
 
 	/**
-	 * Qna class that stores the GameQna
+	 * Qna that uses the GameQna
 	 * @var Qna qna
 	 **/
 	protected $qna = null;
+
+	/**
+	 * Category for the qna
+	 * @var Category category
+	 **/
+	protected $category = null;
+
+	/**
+	 * timestamp of the Message; starts as null and is assigned later
+	 * @var \DateTime $VALID_MESSAGEDATE
+	 **/
+	protected $dateTime = null;
 
 	/**
 	 * create dependent objects before running each test
@@ -39,8 +51,16 @@ class GameQnaTest extends JeopardyTest {
 		// run the default setUp method first
 		parent::setUp();
 
-		// create and insert a Game
-		$this->game = new Game(null);
-		$this->game->insert($this->getPDO());
+		//calculate the date using the time the unit test was set up
+		$this->dateTime = new \DateTime();
+
+		// create and insert a game
+		$this->game = new Game(null, 1, $this->dateTime, 1);
+
+		// create and insert a category
+		$this->category = new Category(null, "css");
+
+		// create and insert a qna
+		$this->qna = new Qna(null, $this->category->getCategoryId(), "Answer", 16, "Question");
 	}
 }
