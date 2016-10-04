@@ -65,7 +65,7 @@ class GameQnaTest extends DDCBJeopardyTest {
 	}
 
 	/**
-	 * test inserting a valid Message and verifying that actual MySQL data matches
+	 * test inserting a valid GameQna and verifying that actual MySQL data matches
 	 **/
 	public function testInsertValidGameQna() {
 		// count the number of rows and save it for later
@@ -81,12 +81,43 @@ class GameQnaTest extends DDCBJeopardyTest {
 	}
 
 	/**
-	 * test inserting a gameQna that already exists
+	 * test inserting a GameQna that already exists
 	 * @expectedException \PDOException
 	 **/
 	public function testInsertInvalidGameQna() {
 		// create a gameQna with a non null id and watch it fail
 		$gameQna = new GameQna(DDCBJeopardyTest::INVALID_KEY, $this->game->getGameId(), $this->qna->getQnaId());
 		$gameQna->insert($this->getPDO());
+	}
+
+	/**
+	 * test inserting a valid GameQna and then deleting it
+	 **/
+	public function testDeleteValidGameQna() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("gameQna");
+
+		// create a new gameQna and insert into mySQL
+		$gameQna = new GameQna(null, $this->game->getGameId(), $this->qna->getQnaId());
+
+		//delete the message from MySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("gameQna"));
+		$gameQna->delete($this->getPDO());
+
+		// grab the data from MySQL and enforce the gameQna does not exist
+		$pdoGameQna = GameQna::getGameQnaByGameQnaId($this->getPDO(), $gameQna->getGameQnaId());
+		$this->assertNull($pdoGameQna);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("gameQna"));
+	}
+
+	/**
+	 * test deleting a GameQna that does not exist
+	 *
+	 * @expectedException \PDOException
+	 **/
+	public function testDeleteInvalidGameQna() {
+		// create a GameQna and try to delete it without inserting it
+		$gameQna = new GameQna(null, $this->game->getGameId(), $this->qna->getQnaId());
+		$gameQna->delete($this->getPDO());
 	}
 }
