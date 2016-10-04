@@ -19,7 +19,7 @@ require_once(dirname(__DIR__) . "/php/classes/autoloader.php");
  * @see GameQna
  * @author Zac Laudick <zlaudick@cnm.edu>
  **/
-class GameQnaTest extends JeopardyTest {
+class GameQnaTest extends DDCBJeopardyTest {
 	/**
 	 * game that uses the GameQna
 	 * @var Game game
