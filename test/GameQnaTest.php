@@ -5,7 +5,7 @@ namespace Edu\Cnm\DDCBJeopardy\Test;
 use Edu\Cnm\DDCBJeopardy\{Game, Qna, Category};
 
 // grab the project test parameters
-require_once("JeopardyTest.php");
+require_once("DDCBJeopardyTest.php");
 
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/php/classes/autoloader.php");
@@ -62,5 +62,31 @@ class GameQnaTest extends DDCBJeopardyTest {
 
 		// create and insert a qna
 		$this->qna = new Qna(null, $this->category->getCategoryId(), "Answer", 16, "Question");
+	}
+
+	/**
+	 * test inserting a valid Message and verifying that actual MySQL data matches
+	 **/
+	public function testInsertValidGameQna() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("gameQna");
+
+		// create a new gameQna and insert into mySQL
+		$gameQna = new GameQna(null, $this->game->getGameId(), $this->qna->getQnaId());
+
+		//grab the data from MySQL and enforce that the fields match our expectations
+		$pdoGameQna = GameQna::getGameQnaByGameQnaId($this->getPDO(), $gameQna->getGameQnaId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("gameQna"));
+		$this->assertEquals($pdoGameQna->getGameQnaGameId(), $this->game->getGameId());
+	}
+
+	/**
+	 * test inserting a gameQna that already exists
+	 * @expectedException \PDOException
+	 **/
+	public function testInsertInvalidGameQna() {
+		// create a gameQna with a non null id and watch it fail
+		$gameQna = new GameQna(DDCBJeopardyTest::INVALID_KEY, $this->game->getGameId(), $this->qna->getQnaId());
+		$gameQna->insert($this->getPDO());
 	}
 }
