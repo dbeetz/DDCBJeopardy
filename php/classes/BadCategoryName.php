@@ -6,7 +6,7 @@ require_once("autoload.php");
 /**
  * class BadCategoryName for entity badCategoryName in the jeopardy application
  *this class contains all state variables, constructor, setters, getters, PDOs, and getFooByBar methods
- * @author Loren Baca
+ * @author Loren Baca baca.loren@gmail.com
  */
 class BadCategoryName implements \JsonSerializable {
 
@@ -328,6 +328,43 @@ class BadCategoryName implements \JsonSerializable {
 		}
 
 		return $badCategoryName;
+	}
+
+
+	/**
+	 * get badCategoryName by badCategoryNameCategoryId and badCategoryNameGameId
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $badCategoryNameCategoryId badCategoryNameCategoryId to search for
+	 * @param int $badCategoryNameGameId badCategoryNameGameId to search for
+	 * @return badCategoryName|null employ if found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+
+	public function getBadCategoryNameByBadCategoryNameCategoryIdAndBadCategoryNameGameId(\PDO $pdo, int $badCategoryNameCategoryId, int $badCategoryNameGameId){
+
+		if($badCategoryNameCategoryId === null || $badCategoryNameGameId === null){
+			throw(new \PDOException("The input foreign keys cannot be null!"));
+		}
+
+		if($badCategoryNameCategoryId <= 0 || $badCategoryNameGameId <= 0){
+			throw(new \PDOException("The input foreign keys cannot be 0 or negative!"));
+		}
+
+		$query = "SELECT badCategoryNameCategoryId, badCategoryNameGameId, badCategoryNameName FROM badCategoryName WHERE badCategoryNameCategoryId = :badCategoryNameCategoryId AND badCategoryNameGameId = :badCategoryNameGameId";
+
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["badCategoryNameCategoryId" => $badCategoryNameCategoryId, "badCategoryNameGameId" => $badCategoryNameGameId];
+
+		$statement->execute($parameters);
+
+
+
+
+
+
+
 
 
 	}
