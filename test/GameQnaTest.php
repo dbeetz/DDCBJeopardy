@@ -74,7 +74,7 @@ class GameQnaTest extends DDCBJeopardyTest {
 		// create a new gameQna and insert into mySQL
 		$gameQna = new GameQna(null, $this->game->getGameId(), $this->qna->getQnaId());
 
-		//grab the data from MySQL and enforce that the fields match our expectations
+		// grab the data from MySQL and enforce that the fields match our expectations
 		$pdoGameQna = GameQna::getGameQnaByGameQnaId($this->getPDO(), $gameQna->getGameQnaId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("gameQna"));
 		$this->assertEquals($pdoGameQna->getGameQnaGameId(), $this->game->getGameId());
@@ -119,5 +119,67 @@ class GameQnaTest extends DDCBJeopardyTest {
 		// create a GameQna and try to delete it without inserting it
 		$gameQna = new GameQna(null, $this->game->getGameId(), $this->qna->getQnaId());
 		$gameQna->delete($this->getPDO());
+	}
+
+	/**
+	 * test grabbing a GameQna by gameQnaGameId
+	 **/
+	public function testGetGameQnaByGameQnaGameId() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("gameQna");
+
+		// create a new gameQna and insert into mySQL
+		$gameQna = new GameQna(null, $this->game->getGameId(), $this->qna->getQnaId());
+
+		// grab the data from MySQL and enforce that the fields match our expectations
+		$results = GameQna::getGameQnaByGameQnaGameId($this->getPDO(), $gameQna->getGameQnaGameId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("gameQna"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DDCBJeopardy\\GameQna", $results);
+
+		// grab the result from the array and validate it
+		$pdoGameQna = $results[0];
+		$this->assertEquals($pdoGameQna->getGameQnaGameId(), $this->game->getGameId());
+		$this->assertEquals($pdoGameQna->getGameQnaQnaId(), $this->qna->getQnaId());
+	}
+
+	/**
+	 * test grabbing a GameQna by a gameQnaGameId that does not exist
+	 **/
+	public function testGetInvalidGameQnaByGameQnaGameId() {
+		// grab a message by a gameQnaGameId that does not exist
+		$gameQna = GameQna::getGameQnaByGameQnaGameId($this->getPDO(), DDCBJeopardyTest::INVALID_KEY);
+		$this->assertCount(0, $gameQna);
+	}
+
+	/**
+	 * test grabbing a GameQna by gameQnaQnaId
+	 **/
+	public function testGetGameQnaByGameQnaQnaId() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("gameQna");
+
+		// create a new gameQna and insert into mySQL
+		$gameQna = new GameQna(null, $this->game->getGameId(), $this->qna->getQnaId());
+
+		// grab the data from MySQL and enforce that the fields match our expectations
+		$results = GameQna::getGameQnaByGameQnaQnaId($this->getPDO(), $gameQna->getGameQnaQnaId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("gameQna"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DDCBJeopardy\\GameQna", $results);
+
+		// grab the result from the array and validate it
+		$pdoGameQna = $results[0];
+		$this->assertEquals($pdoGameQna->getGameQnaGameId(), $this->game->getGameId());
+		$this->assertEquals($pdoGameQna->getGameQnaQnaId(), $this->qna->getQnaId());
+	}
+
+	/**
+	 * test grabbing a GameQna by a gameQnaQnaId that does not exist
+	 **/
+	public function testGetInvalidGameQnaByGameQnaQnaId() {
+		// grab a message by a gameQnaGameId that does not exist
+		$gameQna = GameQna::getGameQnaByGameQnaQnaId($this->getPDO(), DDCBJeopardyTest::INVALID_KEY);
+		$this->assertCount(0, $gameQna);
 	}
 }
