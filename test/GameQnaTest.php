@@ -182,4 +182,26 @@ class GameQnaTest extends DDCBJeopardyTest {
 		$gameQna = GameQna::getGameQnaByGameQnaQnaId($this->getPDO(), DDCBJeopardyTest::INVALID_KEY);
 		$this->assertCount(0, $gameQna);
 	}
+
+	/**
+	 * test grabbing all gameQna's
+	 **/
+	public function testGetAllGameQnas() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("gameQna");
+
+		// create a new gameQna and insert into mySQL
+		$gameQna = new GameQna(null, $this->game->getGameId(), $this->qna->getQnaId());
+
+		// grab the data from MySQL and enforce that the fields match our expectations
+		$results = GameQna::getAllGameQnas($this->getPDO());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("gameQna"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DDCBJeopardy\\GameQna", $results);
+
+		// grab the result from the array and validate it
+		$pdoGameQna = $results[0];
+		$this->assertEquals($pdoGameQna->getGameQnaGameId(), $this->game->getGameId());
+		$this->assertEquals($pdoGameQna->getGameQnaQnaId(), $this->qna->getQnaId());
+	}
 }
