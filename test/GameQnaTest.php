@@ -122,6 +122,15 @@ class GameQnaTest extends DDCBJeopardyTest {
 	}
 
 	/**
+	 * test grabbing a GameQna that does not exist
+	 **/
+	public function testGetInvalidGameQnaByGameQnaId() {
+		// grab a gameQnaId that exceeds the maximum allowable gameQnaId
+		$gameQna = GameQna::getGameQnaByGameQnaId($this->getPDO(), DDCBJeopardyTest::INVALID_KEY);
+		$this->assertNull($gameQna);
+	}
+
+	/**
 	 * test grabbing a GameQna by gameQnaGameId
 	 **/
 	public function testGetGameQnaByGameQnaGameId() {
