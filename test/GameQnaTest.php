@@ -2,7 +2,7 @@
 
 namespace Edu\Cnm\DDCBJeopardy\Test;
 
-use Edu\Cnm\DDCBJeopardy\{Game, Qna, Category};
+use Edu\Cnm\DDCBJeopardy\{GameQna, Game, Qna, Category};
 
 // grab the project test parameters
 require_once("DDCBJeopardyTest.php");
