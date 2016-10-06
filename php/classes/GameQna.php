@@ -138,4 +138,51 @@ class GameQna implements \JsonSerializable {
 		// convert and store the gameQnaGameId
 		$this->gameQnaQnaId = $newGameQnaQnaId;
 	}
+
+	/**
+	 * inserts this GameQna in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) {
+		// enforce the GameQnaId is null
+		if($this->gameQnaId !== null) {
+			throw(new \PDOException("GameQna already exists"));
+		}
+
+		// create query template
+		$query = "INSERT INTO gameQna(gameQnaGameId, gameQnaQnaId) VALUES(:gameQnaGameId, :gameQnaQnaId)";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = ["gameQnaGameId" => $this->gameQnaGameId, "gameQnaQnaId" => $this->gameQnaQnaId];
+		$statement->execute($parameters);
+
+		// update the null gameQnaId with what mySQL just gave us
+		$this->gameQnaId = intval($pdo->lastInsertId());
+	}
+
+	/**
+	 * deletes this GameQna from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) {
+		// enforce the gameQnaId is not null
+		if($this->gameQnaId === null) {
+			throw(new \PDOException("unable to delete a gameQna that does not exist"));
+		}
+
+		// create a query template
+		$query = "DELETE FROM gameQna WHERE gameQnaId = :gameQnaId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holder in the template
+		$parameters = ["gameQnaId" => $this->gameQnaId];
+		$statement->execute($parameters);
+	}
 }
