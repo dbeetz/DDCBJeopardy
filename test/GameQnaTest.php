@@ -17,7 +17,7 @@ require_once(dirname(__DIR__) . "/php/classes/autoloader.php");
  * are tested for both invalid and valid inputs
  *
  * @see GameQna
- * @author Zac Laudick <zlaudick@cnm.edu>
+ * @author Zac Laudick <zaclaudick@gmail.com>
  **/
 class GameQnaTest extends DDCBJeopardyTest {
 	/**
