@@ -185,4 +185,160 @@ class GameQna implements \JsonSerializable {
 		$parameters = ["gameQnaId" => $this->gameQnaId];
 		$statement->execute($parameters);
 	}
+
+	/**
+	 * gets the gameQna by GameQnaId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $gameQnaId gameQnaId to search for
+	 * @return GameQna|null GameQna found or null if not found
+	 * @throws \PDOException when mySQL relate errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getGameQnaByGameQnaId(\PDO $pdo, $gameQnaId) {
+		// sanitize the gameQnaId before searching
+		if($gameQnaId <= 0) {
+			throw(new \PDOException("gameQnaId is not positive"));
+		}
+
+		// create query template
+		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId FROM gameQna WHERE gameQnaId = :gameQnaId";
+		$statement = $pdo->prepare($query);
+
+		// bind the gameQnaId to the place holder in the template
+		$parameters = array("gameQnaId" => $gameQnaId);
+		$statement->execute($parameters);
+
+		// grab the gameQna from mySQL
+		try {
+			$gameQna = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted throw it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($gameQna);
+	}
+
+	/**
+	 * gets gameQna by gameQnaGameId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $gameQnaGameId gameQnaGameId to search for
+	 * @return \SplFixedArray SplFixedArray of gameQnaGameId's found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getGameQnaByGameQnaGameId(\PDO $pdo, int $gameQnaGameId) {
+		// sanitize the gameQnaGameId before searching
+		if($gameQnaGameId <= 0) {
+			throw(new \PDOException("gameQnaGameId is not positive"));
+		}
+
+		// create query template
+		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId FROM gameQna WHERE gameQnaGameId = :gameQnaGameId";
+		$statement = $pdo->prepare($query);
+
+		// bind the gameQnaGameId to the placeholder in the template
+		$parameters = array("gameQnaGameId" => $gameQnaGameId);
+		$statement->execute($parameters);
+
+		// build an array of gameQna's
+		$gameQnas = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"]);
+				$gameQnas[$gameQnas->key()] = $gameQna;
+				$gameQnas->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($gameQnas);
+	}
+
+	/**
+	 * gets gameQna by gameQnaQnaId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $gameQnaQnaId gameQnaQnaId to search for
+	 * @return \SplFixedArray SplFixedArray of gameQnaQnaId's found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getGameQnaByGameQnaQnaId(\PDO $pdo, int $gameQnaQnaId) {
+		// sanitize the gameQnaGameId before searching
+		if($gameQnaQnaId <= 0) {
+			throw(new \PDOException("gameQnaQnaId is not positive"));
+		}
+
+		// create query template
+		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId FROM gameQna WHERE gameQnaQnaId = :gameQnaQnaId";
+		$statement = $pdo->prepare($query);
+
+		// bind the gameQnaQnaId to the placeholder in the template
+		$parameters = array("gameQnaQnaId" => $gameQnaQnaId);
+		$statement->execute($parameters);
+
+		// build an array of gameQna's
+		$gameQnas = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"]);
+				$gameQnas[$gameQnas->key()] = $gameQna;
+				$gameQnas->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($gameQnas);
+	}
+
+	/**
+	 * gets all gameQna's
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray SplFixedArray of gameQna's found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getAllGameQnas(\PDO $pdo) {
+		// create query template
+		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId FROM gameQna";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+
+		// build an array of gameQna's
+		$gameQnas = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"]);
+				$gameQnas[$gameQnas->key()] = $gameQna;
+				$gameQnas->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($gameQnas);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() {
+		$fields = get_object_vars($this);
+		return($fields);
+	}
 }
