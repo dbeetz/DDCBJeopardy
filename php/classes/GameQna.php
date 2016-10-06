@@ -57,4 +57,85 @@ class GameQna implements \JsonSerializable {
 			throw(new \Exception($exception->getMessage(), 0, $exception));
 		}
 	}
+
+	/**
+	 * accessor method for gameQnaId
+	 * @return int|null value of gameQnaId
+	 **/
+	public function getGameQnaId() {
+		return($this->gameQnaId);
+	}
+
+	/**
+	 * mutator method for gameQnaId
+	 *
+	 * @param int|null $newGameQnaId new value of gameQnaId
+	 * @throws \RangeException if $newGameQnaId is not positive
+	 * @throws \TypeError if $newGameQnaId is not an integer
+	 **/
+	public function setGameQnaId(int $newGameQnaId = null) {
+		// base case: if the gameQnaId is null, this is a new gameQna id without a mySQL assigned id (yet)
+		if($newGameQnaId === null) {
+			$this->gameQnaId = null;
+			return;
+		}
+
+		// verify the gameQnaId is positive
+		if($newGameQnaId <= 0) {
+			throw(new \RangeException("gameQnaId is not positive"));
+		}
+
+		// convert and store the gameQnaId
+		$this->gameQnaId = $newGameQnaId;
+	}
+
+	/**
+	 * accessor method for gameQnaGameId
+	 * @return int value of gameQnaGameId; foreign key
+	 **/
+	public function getGameQnaGameId() {
+		return($this->gameQnaGameId);
+	}
+
+	/**
+	 * mutator method for gameQnaGameId
+	 *
+	 * @param int $newGameQnaGameId new value of gameQnaGameId
+	 * @throws \RangeException if $newGameQnaGameId is not positive
+	 * @throws \TypeError if $newGameQnaGameId is not an integer
+	 **/
+	public function setGameQnaGameId(int $newGameQnaGameId) {
+		// verify the gameQnaGameId is positive
+		if($newGameQnaGameId <= 0) {
+			throw(new \RangeException("gameQnaGameId is not positive"));
+		}
+
+		// convert and store the gameQnaGameId
+		$this->gameQnaGameId = $newGameQnaGameId;
+	}
+
+	/**
+	 * accessor method for gameQnaQnaId
+	 * @return int value of gameQnaQnaId; foreign key
+	 **/
+	public function getGameQnaQnaId() {
+		return($this->gameQnaQnaId);
+	}
+
+	/**
+	 * mutator method for gameQnaQnaId
+	 *
+	 * @param int $newGameQnaQnaId new value of gameQnaQnaId
+	 * @throws \RangeException if $newGameQnaQnaId is not positive
+	 * @throws \TypeError if $newGameQnaQnaId is not an integer
+	 **/
+	public function setGameQnaQnaId(int $newGameQnaQnaId) {
+		// verify the gameQnaGameId is positive
+		if($newGameQnaQnaId <= 0) {
+			throw(new \RangeException("gameQnaQnaId is not positive"));
+		}
+
+		// convert and store the gameQnaGameId
+		$this->gameQnaQnaId = $newGameQnaQnaId;
+	}
 }
