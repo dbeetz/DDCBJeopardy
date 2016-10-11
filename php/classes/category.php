@@ -16,12 +16,6 @@ class Category implements \JsonSerializable{
 	private $categoryId;
 
 	/**
-	 * this is the foreign key from Game
-	 * @var int $categoryGameId
-	**/
-	private $categoryGameId;
-
-	/**
 	 * name of category
 	 * @var string $categoryName
 	**/
@@ -31,7 +25,6 @@ class Category implements \JsonSerializable{
 	 * Constructor for this Category
 	 *
 	 * @param int|null $newCategoryId of this category or null if a new category
-	 *@param int|null $newCategoryGameId id for the key from Game
 	 *@param string $newCategoryName string containing category name
 	 *@throws \InvalidArgumentException if data types are not valid
 	 *@throws \RangeException if data values are out of bounds
@@ -39,10 +32,9 @@ class Category implements \JsonSerializable{
 	 *@throws \Exception if some other exception occurs
 	**/
 
-	public function __construct(int $newCategoryId = null, int $newCategoryGameId = null, string $newCategoryName) {
+	public function __construct(int $newCategoryId = null, string $newCategoryName) {
 		try{
 			$this->setCategoryId($newCategoryId);
-			$this->setCategoryGameId($newCategoryGameId);
 			$this->setCategoryName($newCategoryName);
 		} catch(\InvalidArgumentException $invalidArgument){
 			//rethrow exception to the caller
@@ -90,33 +82,6 @@ class Category implements \JsonSerializable{
 	}
 
 	/**
-	 * Accessor method for categoryGameId
-	 *
-	 * @return int|null value of categoryGameId
-	**/
-	public function getCategoryGameId(){
-		return($this->categoryGameId);
-	}
-
-	/**
-	 * Mutator method for categoryGameId
-	 *
-	 * @param int $newCategoryGameId new value for categoryGameId
-	 * @throws \RangeException if $categoryGameId is not positive
-	 * @throws \TypeError if $categoryGameId is not an integer
-	**/
-
-	public function setCategoryGameId(int $newCategoryGameId) {
-		//verify that the $newCategoryGameId is positive
-		if($newCategoryGameId <= 0) {
-			throw(new \RangeException("Category Game Id is not positive"));
-		}
-
-		//convert and store the qna category id
-		$this->categoryGameId = $newCategoryGameId;
-	}
-
-	/**
 	 * accessor method for category name
 	 *
 	 * @return string value of category name
@@ -161,11 +126,11 @@ class Category implements \JsonSerializable{
 			throw(new \PDOException("not a new category"));
 		}
 		// create query template
-		$query = "INSERT INTO category(categoryGameId, categoryName) VALUES(:categoryGameId, :categoryName)";
+		$query = "INSERT INTO category(categoryName) VALUES(:categoryName)";
 
 		$statement = $pdo->prepare($query);
 		// bind the member variables to the place holders in the template
-		$parameters = ["categoryGameId"=>$this->categoryGameId, "categoryName" => $this->categoryName];
+		$parameters = ["categoryName" => $this->categoryName];
 		$statement->execute($parameters);
 		// update the null categoryId with what mySQL just gave us
 		$this->categoryId = intval($pdo->lastInsertId());
@@ -184,10 +149,10 @@ class Category implements \JsonSerializable{
 			throw(new \PDOException("unable to update the category data that doesn't exist"));
 		}
 		// create query template
-		$query = "UPDATE category SET categoryGameId = :categoryGameId, categoryName = :categoryName";
+		$query = "UPDATE category SET categoryName = :categoryName";
 		$statement = $pdo->prepare($query);
 		// bind the member variables to the place holders in the template
-		$parameters = ["categoryGameId"=> $this->categoryGameId, "categoryName" => $this->categoryName, "categoryId" => $this->categoryId];
+		$parameters = [ "categoryName" => $this->categoryName, "categoryId" => $this->categoryId];
 		$statement->execute($parameters);
 	}
 	/**
@@ -229,7 +194,7 @@ class Category implements \JsonSerializable{
 			throw(new \PDOException("category name is invalid"));
 		}
 		// create query template
-		$query = "SELECT categoryId, categoryGameId, categoryName  FROM category WHERE categoryName LIKE :categoryName";
+		$query = "SELECT categoryId, categoryName  FROM category WHERE categoryName LIKE :categoryName";
 		$statement = $pdo->prepare($query);
 		// bind the category content to the place holder in the template
 		$categoryName = "%$categoryName%";
@@ -240,7 +205,7 @@ class Category implements \JsonSerializable{
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$category = new Category($row["categoryId"],$row["categoryGameId"], $row["categoryName"]);
+				$category = new Category($row["categoryId"], $row["categoryName"]);
 				$categories[$categories->key()] = $category;
 				$categories->next();
 			} catch(\Exception $exception) {
@@ -267,7 +232,7 @@ class Category implements \JsonSerializable{
 			throw(new \PDOException("category id is not positive"));
 		}
 		// create query template
-		$query = "SELECT categoryId, categoryGameId,categoryName FROM category WHERE categoryId = :categoryId";
+		$query = "SELECT categoryId,categoryName FROM category WHERE categoryId = :categoryId";
 		$statement = $pdo->prepare($query);
 		// bind the category id to the place holder in the template
 		$parameters = array("categoryId" => $categoryId);
@@ -278,7 +243,7 @@ class Category implements \JsonSerializable{
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$category = new Category($row["categoryId"], $row["categoryGameId"], $row["categoryName"]);
+				$category = new Category($row["categoryId"], $row["categoryName"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -286,43 +251,6 @@ class Category implements \JsonSerializable{
 		}
 		return($category);
 	}
-
-	/**
-	 * get the category by game id
-	 * @param \PDO $pdo PDO connection object
-	 * @param int $categoryGameId category id to search for
-	 * @return \SplFixedArray of categories found
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when variables are not the correct data types
-	**/
-	public static function getCategoryByCategoryGameId(\PDO $pdo, int $categoryGameId){
-		//sanitize the game id before searching
-	if($categoryGameId <= 0) {
-		throw(new \RangeException("category game id must be positive"));
-}
-//create query template
-$query = "SELECT categoryId, categoryGameId, categoryName FROM category WHERE categoryGameId = :categoryGameId";
-$statement = $pdo->prepare($query);
-//bind the category game id to the place holder in the template
-
-$parameters = ["categoryGameId" => $categoryGameId];
-$statement->execute($parameters);
-//build an array of images
-$categories = new \SplFixedArray($statement->rowCount());
-$statement->setFetchMode(\PDO::FETCH_ASSOC);
-while(($row = $statement->fetch()) !== false) {
-	try {
-		$category = new Category($row["categoryId"], $row["categoryGameId"], $row["categoryName"]);
-
-		$categories[$categories->key()] = $category;
-		$categories->next();
-	} catch(\Exception $exception) {
-		//if the row couldnt' be converted, rethrow it
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
-	}
-}
-return ($categories);
-}
 
 	/**
 	 * gets all Categories
@@ -334,7 +262,7 @@ return ($categories);
 	 **/
 	public static function getAllCategories(\PDO $pdo) {
 		// create query template
-		$query = "SELECT categoryId, categoryGameId, categoryName FROM category";
+		$query = "SELECT categoryId, categoryName FROM category";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 		// build an array of categories
@@ -342,7 +270,7 @@ return ($categories);
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$category = new Category($row["categoryId"],$row["categoryGameId"], $row["categoryName"]);
+				$category = new Category($row["categoryId"], $row["categoryName"]);
 				$categories[$categories->key()] = $category;
 				$categories->next();
 			} catch(\Exception $exception) {

@@ -19,12 +19,12 @@ class CategoryTest extends DDCBJeopardy {
 	 * content of the Category
 	 * @var string $VALID_CATEGORYNAME
 	 **/
-	protected $VALID_CATEGORYNAME = "All about that CSS";
+	protected $VALID_CATEGORYNAME = "CSS";
 	/**
 	 * content of the updated Category
 	 * @var string $VALID_CATEGORYNAME2
 	 **/
-	protected $VALID_CATEGORYNAME2 = "Object Orientation and Stuff";
+	protected $VALID_CATEGORYNAME2 = "Object Oriented PHP";
 	/**
 	 * test inserting a valid Category and verify that the actual mySQL data matches
 	 **/
