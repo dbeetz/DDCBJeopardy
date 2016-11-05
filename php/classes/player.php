@@ -128,4 +128,40 @@ class player implements JsonSerialize {
 
 		$this->playerStudentCohortId = $newPlayerStudentCohortId;
 	}
-}
+
+	/*PDO/SQL Methods*/
+
+	/**
+	 * inserts this Player into mySQL
+	 *
+	 * @param \PDO $pdo is the PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 *
+	 **/
+
+	public function insert(\PDO $pdo) {
+
+		if($this->playerId === null || $this->playerId === null) {
+			throw(new \InvalidArgumentException("The foreign key cannot be null!"));
+		}
+		if($this->playerGameId === null || $this->playerGameId === null) {
+			throw(new \InvalidArgumentException("The foreign key cannot be null!"));
+		}
+		if($this->playerStudentId === null || $this->playerStudentId === null) {
+			throw(new \InvalidArgumentException("The foreign key cannot be null!"));
+		}
+		if($this->playerStudentCohortId === null || $this->playerStudentCohortId === null) {
+			throw(new \InvalidArgumentException("The Player Student Cohot ID cannot be null!"));
+		}
+
+		/*----Create query template-----*/
+		$query = "INSERT INTO player(playerId, playerGameId, playerStudentId, 
+playerStudentCohortId) VALUES(:playerId, :playerGameId, :playerStudentId, :playerStudentCohortId)";
+
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["playerId" => $this->playerId, "playerGameId" => $this->playerGameId, "playerStudentId" => $this->playerStudentId, "playerStudentCohortId" => $this->playerStudentCohortId];
+
+		$statement->execute($parameters);
+	}
