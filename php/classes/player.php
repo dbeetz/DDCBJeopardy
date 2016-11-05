@@ -176,3 +176,29 @@ playerStudentCohortId) VALUES(:playerId, :playerGameId, :playerStudentId, :playe
 		$parameters = ["playerId" => $this->playerId, "playerGameId" => $this->playerGameId, "playerStudentId" => $this->playerStudentId, "playerStudentCohortId" => $this->playerStudentCohortId];
 		$statement->execute($parameters);
 	}
+
+	public function delete(\PDO $pdo) {
+
+		if($this->playerId === null || $this->playerId === null) {
+			throw(new \InvalidArgumentException("Cannot delete a player that doesnt exist!"));
+		}
+		if($this->playerGameId === null || $this->playerGameId === null) {
+			throw(new \InvalidArgumentException("Cannot delete a player from an unexistent game!"));
+		}
+		if($this->playerStudentId === null || $this->playerStudentId === null) {
+			throw(new \InvalidArgumentException("The student Id is null!"));
+		}
+
+		/*----Create query template-----*/
+		$query = "DELETE FROM player WHERE playerId = :playerId AND playerGameId = :playerGameId AND playerStudentId = :playerStudentId";
+
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["playerId" => $this->playerId, "playerGameId" => $this->playerGameId, "playerStudentId => $this->playerStudentId"];
+
+		$statement->execute($parameters);
+
+	}
+
+}
+
