@@ -221,6 +221,28 @@ class GameQna implements \JsonSerializable {
 	}
 
 	/**
+	 * updates this gameQna in MySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) {
+		// enforce the gameQnaId is not null
+		if($this->gameQnaId === null) {
+			throw(new \PDOException("Unable to update gameQna that doesn't exist"));
+		}
+
+		// create a query template
+		$query = "UPDATE gameQna SET gameQnaPass = :gameQnaPass WHERE gameQnaId = :gameQnaId";
+		$statment = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = ["gameQnaGameId" => $this->gameQnaGameId, "gameQnaQnaId" => $this->gameQnaQnaId, "gameQnaPass" => $this->gameQnaPass, "gameQnaId" => $this->getGameQnaId()];
+		$statment->execute($parameters);
+	}
+
+	/**
 	 * gets the gameQna by GameQnaId
 	 *
 	 * @param \PDO $pdo PDO connection object
