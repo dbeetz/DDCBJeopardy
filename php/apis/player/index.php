@@ -49,4 +49,48 @@ try {
   			} else if(empty($playerStudentCohortId) === false) {
   				$playerStudentCohortId = DDCBJeopardy\Player::getPlayerStudentCohortId($pdo, $playerStudentCohortId);
   				$reply->data = $playerStudentCohortId;
-  			}
+  			}else if($method === "POST") {
+		verifyXsrf();
+		$requestContent = file_get_contents("php://input");
+		$requestObject = json_decode($requestContent);
+		//make sure is available
+		if(empty($requestObject->playerId) === true) {
+			throw(new \InvalidArgumentException ("NoPlayer Exists. So there.", 405));
+		}
+		if(empty($_SESSION["player"]) === true) {
+			throw(new RuntimeException(".", 401));
+		}
+		$playerId = new DDCBJeopardy\Player($requestObject->playerId, $_SESSION["player"]->getplayerId());
+		$playerId->insert($pdo);
+		// update reply
+		$reply->message = "created OK";
+  }else if($method === "DELETE") {
+		verifyXsrf();
+		// retrieve the Favorite Player to be deleted
+		$playerId = DDCBJeopardy\Player::getPlayerIdAndPlayerGameIdAndPlayerStudentCohortId($pdo, $playerId, $playerGameId, $playerStudentCohortId);
+		if($playerId === null) {
+			throw(new \RuntimeException("DNE: Does not exist", 404));
+		}
+
+		$playerId->delete($pdo);
+		// update reply
+		$reply->message = " Player deleted OK";
+	} else {
+		throw (new \InvalidArgumentException("Invalid HTTP method request"));
+	}
+} catch
+(Exception $exception) {
+	$reply->status = $exception->getCode();
+	$reply->message = $exception->getMessage();
+	$reply->trace = $exception->getTraceAsString();
+} catch(TypeError $typeError) {
+	$reply->status = $typeError->getCode();
+	$reply->message = $typeError->getMessage();
+	//wat
+}
+header("Content-type: application/json");
+if($reply->data === null) {
+	unset($reply->data);
+}
+// encode and return reply to front end caller
+echo json_encode($reply);
