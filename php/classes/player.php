@@ -7,7 +7,7 @@ require_once("autoloader.php");
  *
  * @author Eliot Ostling
  */
-class player implements JsonSerializable {
+class player implements JsonSerialize {
 
 	private $playerId;
 
