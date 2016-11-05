@@ -199,7 +199,7 @@ playerStudentCohortId) VALUES(:playerId, :playerGameId, :playerStudentId, :playe
 		$statement->execute($parameters);
 
 	}
-
+//getFooByBar #1
   public static function getPlayerbyPlayerId(\PDO $pdo, $playerId)
    {
        if($playerId <= 0) {
@@ -210,7 +210,7 @@ playerStudentCohortId) VALUES(:playerId, :playerGameId, :playerStudentId, :playe
        $parameters = array("playerId" => $playerId);
        $statement->execute($parameters);
        try {
-           $event = null;
+           $player = null;
            $statement->setFetchMode(\PDO::FETCH_ASSOC);
            $row = $statement->fetch();
            if($row !== false) {
