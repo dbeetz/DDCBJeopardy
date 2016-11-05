@@ -446,6 +446,37 @@ class Qna implements \JsonSerializable {
 
 
 	/**
+	 * gets all QNA's
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray SplFixedArray of QNAs found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public function getAllQnas(\PDO $pdo){
+		//create query template
+		$query = "SELECT qnaId, qnaCategoryId, qnaAnswer, qnaPointVal, qnaQuestion FROM Qna";
+
+		$statement = $pdo->prepare($query);
+		$statement->execute();
+
+		//build an array of Qnas
+		$qnas = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false){
+			try{
+				$qna = new Qna($row["qnaId"], $row["qnaCategoryId"], $row["qnaAnswer"], $row["qnaPointVal"], $row["qnaQuestion"]);
+				$qnas[$qnas->key()] = $qna;
+				$qnas->next();
+			}catch(\Exception $exception){
+				//if the row couldn't be converted rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($qnas);
+	}
+
+	/**
 	 * Formats the state variables for JSON serialization
 	 *
 	 * @return array resulting state variables to serialize
