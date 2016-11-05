@@ -444,6 +444,56 @@ class Qna implements \JsonSerializable {
 		return($qnas);
 	}
 
+	/**
+	 * get qna by qnaAnswer
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param string $qnaAnswer the answer to search for
+	 * @return \SplFixedArray of qnas found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getQnaByQnaAnswer(\PDO $pdo, string $qnaAnswer){
+		//sanitize string
+		$qnaAnswer = trim($qnaAnswer);
+		$qnaAnswer = filter_var($qnaAnswer, FILTER_SANITIZE_STRING);
+
+		if(empty ($qnaAnswer) === true){
+			throw(new \PDOException("The answer is empty"));
+		}
+
+		if(strlen($qnaAnswer) > 256){
+			throw(new \PDOException("The qna answer entered is too long"));
+		}
+
+		//create query template
+		$query = "SELECT qnaId, qnaCategoryId, qnaAnswer, qnaPointVal, qnaQuestion FROM qna WHERE qnaAnswer LIKE :qnaAnswer";
+
+		//prepare template
+		$statement = $pdo->prepare($query);
+
+		//bind to placeholder in the template
+		$qnaAnswer = "%$qnaAnswer%";
+		$parameters = ["qnaAnswer" => $qnaAnswer];
+		//execute the SQL statement
+		$statement->execute($parameters);
+
+		//build an array of qnas
+		$qnas = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+
+		while(($row = $statement->fetch()) !== false){
+			try{
+				$qna = new Qna($row["qnaId"], $row["qnaCategoryId"], $row["qnaAnswer"], $row["qnaPointVal"], $row["qnaQuestion"]);
+
+				$qnas[$qnas->key()] = $qna;
+				$qnas->next();
+			}catch(\Exception $exception){
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($qnas);
+}
 
 	/**
 	 * gets all QNA's
