@@ -36,4 +36,33 @@ try {
 	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true || $id < 0)) {
 		throw(new InvalidArgumentException("id cannot be negative or empty", 405));
 	}
-} 
+
+	// handle GET request, if id is present that project is returned
+	if($method === "GET") {
+		// set XSRF cookie
+		setXsrfCookie();
+
+		// get a specific game and update the reply
+		if(empty($id) === false) {
+			$game = Game::getGameByGameId($pdo, $id);
+			if($game !== null) {
+				$reply->data = $game;
+			}
+		}
+	} elseif($method === "PUT" || $method === "POST") {
+
+		verifyXsrf();
+		$requestContent = file_get_contents("php://input");
+		$requestObject = json_decode($requestContent);
+
+		//make sure that the game content is present
+		if(empty($requestObject) === true) {
+			throw(new \InvalidArgumentException("No game content present", 405));
+		}
+
+		//make sure that the profile is allowed to make a game
+		//code from Dylan's auth method goes here
+
+
+	}
+}
