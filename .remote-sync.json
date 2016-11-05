@@ -4,13 +4,13 @@
   "deleteLocal": false,
   "hostname": "bootcamp-coders.cnm.edu",
   "port": "22",
-  "target": "/home/dbeets/public_html/jeopardy",
+  "target": "https://bootcamp-coders.cnm.edu/~dbeets/jeopardy",
   "ignore": [
     ".remote-sync.json",
     ".git/**"
   ],
   "username": "dbeets",
-  "keyfile": "C:\\Users\\dbeets\\Desktop\\bootcamp\\ssh-key.openssh",
+  "keyfile": "C:\\Users\\dbeets\\Desktop\bootcamp\\ssh-key.openssh",
   "passphrase": "Salomo2n",
   "watch": [],
   "transport": "scp"
