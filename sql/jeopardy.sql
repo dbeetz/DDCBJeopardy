@@ -128,6 +128,7 @@ CREATE TABLE gameQna (
 	gameQnaId INT UNSIGNED AUTO_INCREMENT NOT NULL,
 	gameQnaGameId INT UNSIGNED NOT NULL,
 	gameQnaQnaId INT UNSIGNED NOT NULL,
+	gameQnaPass BOOL,
 	INDEX(gameQnaGameId),
 	INDEX(gameQnaQnaId),
 	FOREIGN KEY(gameQnaGameId) REFERENCES game(gameId),

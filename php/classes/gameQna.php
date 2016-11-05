@@ -28,21 +28,29 @@ class GameQna implements \JsonSerializable {
 	private $gameQnaQnaId;
 
 	/**
+	 * boolean value for discarding unwanted questions
+	 * @var bool $gameQnaPass
+	 **/
+	private $gameQnaPass;
+
+	/**
 	 * constructor for this GameQna
 	 *
 	 * @param int|null $newGameQnaId id of this GameQna or null if new GameQna
 	 * @param int $newGameQnaGameId foreign key from Game
 	 * @param int $newGameQnaQnaId foreign key from Qna
+	 * @param bool $newGameQnaPass
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
-	public function __construct(int $newGameQnaId = null, int $newGameQnaGameId, int $newGameQnaQnaId) {
+	public function __construct(int $newGameQnaId = null, int $newGameQnaGameId, int $newGameQnaQnaId, bool $newGameQnaPass) {
 		try {
 			$this->setGameQnaId($newGameQnaId);
 			$this->setGameQnaGameId($newGameQnaGameId);
 			$this->setGameQnaQnaId($newGameQnaQnaId);
+			$this->setGameQnaPass($newGameQnaPass);
 		} catch(\InvalidArgumentException $invalidArgument) {
 			// rethrow the exception to the caller
 			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
@@ -137,6 +145,32 @@ class GameQna implements \JsonSerializable {
 
 		// convert and store the gameQnaGameId
 		$this->gameQnaQnaId = $newGameQnaQnaId;
+	}
+
+	/**
+	 * accessor method for gameQnaPass
+	 * @return bool value of gameQnaPass
+	 **/
+	public function getGameQnaPass() {
+		return($this->gameQnaPass);
+	}
+
+	/**
+	 * mutator method for gameQnaPass
+	 *
+	 * @param bool $newGameQnaPass new value of gameQnaPass
+	 * @throws \TypeError if $newGameQnaPass is not a boolean
+	 **/
+	public function setGameQnaPass(bool $newGameQnaPass) {
+		$newGameQnaPass = false;
+
+		// verify the gameQnaPass value is boolean
+		if(is_bool($newGameQnaPass) === false) {
+			throw(new \TypeError("this is not a boolean value"));
+		}
+
+		// convert and store the gameQnaPass value
+		$this->gameQnaPass = $newGameQnaPass;
 	}
 
 	/**
