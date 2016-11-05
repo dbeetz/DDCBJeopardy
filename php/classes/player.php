@@ -216,7 +216,6 @@ playerStudentCohortId) VALUES(:playerId, :playerGameId, :playerStudentId, :playe
            if($row !== false) {
                $player = new player($row["playerId"], $row["playerGameId"], $row["playerStudentId"],$row["playerStudentCohortId"]);
            }
-           $preFormat = $player->playerId;
        } catch(\Exception $exception) {
            throw(new \PDOException($exception->getMessage(), 0, $exception));
        }
@@ -239,7 +238,28 @@ playerStudentCohortId) VALUES(:playerId, :playerGameId, :playerStudentId, :playe
 			if($row !== false) {
 				$player = new player($row["playerId"], $row["playerGameId"], $row["playerStudentId"],$row["playerStudentCohortId"]);
            }
-			$preFormat = $playerGame->playerGameId;
+		} catch(\Exception $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return ($player);
+	}
+
+  public static function getPlayerByPlayerStudentId(\PDO $pdo, $playerStudentId)
+	{
+		if($playerStudentId <= 0) {
+			throw(new \PDOException("wrong"));
+		}
+		$query = "SELECT playerId, playerGameId, playerStudentId, playerStudentCohortId  FROM player WHERE playerStudentId = :playerStudentId";
+		$statement = $pdo->prepare($query);
+		$parameters = array("playerStudentId" => $playerStudentId);
+		$statement->execute($parameters);
+		try {
+			$player = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$player = new player($row["playerId"], $row["playerGameId"], $row["playerStudentId"],$row["playerStudentCohortId"]);
+           }
 		} catch(\Exception $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
