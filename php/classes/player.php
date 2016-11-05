@@ -199,7 +199,7 @@ playerStudentCohortId) VALUES(:playerId, :playerGameId, :playerStudentId, :playe
 		$statement->execute($parameters);
 
 	}
-//getFooByBar #1
+
   public static function getPlayerbyPlayerId(\PDO $pdo, $playerId)
    {
        if($playerId <= 0) {
