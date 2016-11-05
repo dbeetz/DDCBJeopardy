@@ -16,11 +16,13 @@ class BadCategoryName implements \JsonSerializable {
 	 */
 	private $badCategoryNameCategoryId;
 
+
 	/**
 	 * foreign key for badCategoryName class is badCategoryNameGameId linking to Game Class
 	 * @var badCategoryNameGameId
 	 */
 	private $badCategoryNameGameId;
+
 
 	/**
 	 * name assigned to badCategoryNameName
@@ -357,12 +359,12 @@ class BadCategoryName implements \JsonSerializable {
 
 		$statement->execute($parameters);
 
-		//jsonSerialize
+		//adding jsonSerialize
 		/**
 		 * formats the state variables for JSON serialization
 		 *
 		 * @return array resulting state variables to serialize
-		 **/
+		 */
 		public function jsonSerialize() {
 			$fields = get_object_vars($this);
 			return($fields);
