@@ -1,6 +1,6 @@
 <?php
 
-namespace Edu\Cnm\Jeopardy;
+namespace Edu\Cnm\DDCBJeopardy;
 
 require_once("autoloader.php");
 
@@ -308,5 +308,4 @@ class Game implements \JsonSerializable {
 		$fields["gameDateTime"] = ($this->gameDateTime->format("U")) * 1000;
 		return ($fields);
 	}
-
 }

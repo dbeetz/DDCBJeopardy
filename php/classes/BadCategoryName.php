@@ -359,23 +359,16 @@ class BadCategoryName implements \JsonSerializable {
 
 		$statement->execute($parameters);
 
-
-
-
-
-
-
-
-
+		/**
+		 * formats the state variables for JSON serialization
+		 *
+		 * @return array resulting state variables to serialize
+		 */
+		public function jsonSerialize() {
+			$fields = get_object_vars($this);
+			return($fields);
+		}
 	}
 
 
 }
-
-
-
-
-
-
-
-
