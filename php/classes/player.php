@@ -156,12 +156,23 @@ class player implements JsonSerialize {
 		}
 
 		/*----Create query template-----*/
-		$query = "INSERT INTO player(playerId, playerGameId, playerStudentId, 
+		$query = "INSERT INTO player(playerId, playerGameId, playerStudentId,
 playerStudentCohortId) VALUES(:playerId, :playerGameId, :playerStudentId, :playerStudentCohortId)";
 
 		$statement = $pdo->prepare($query);
 
 		$parameters = ["playerId" => $this->playerId, "playerGameId" => $this->playerGameId, "playerStudentId" => $this->playerStudentId, "playerStudentCohortId" => $this->playerStudentCohortId];
 
+		$statement->execute($parameters);
+	}
+
+  public function update(\PDO $pdo) {
+		if ($this->playerId === null) {
+			throw new \PDOException("Update is wrong.");
+		}
+		// Create query template
+		$query = "UPDATE playerId SET playerGameId = :playerGameId, playerStudentId = :playerStudentId, playerStudentCohortId = :playerStudentCohortId WHERE playerId = :playerId";
+		$statement = $pdo->prepare($query);
+		$parameters = ["playerId" => $this->playerId, "playerGameId" => $this->playerGameId, "playerStudentId" => $this->playerStudentId, "playerStudentCohortId" => $this->playerStudentCohortId];
 		$statement->execute($parameters);
 	}
