@@ -60,9 +60,27 @@ try {
 			throw(new \InvalidArgumentException("No game content present", 405));
 		}
 
-		//make sure that the profile is allowed to make a game
+		//make sure that the profile is allowed to make a game (Dylan or other instructor)
 		//code from Dylan's auth method goes here
 
+		//assign date and time to a new game session
+		if(empty($requestObject->gameDateTime) === true) {
+			$requestObject->gameDateTime = new \DateTime();
+		}
 
+		//perform the actual put or post
+		if($method === "PUT") {
+
+			//retrieve the game to update
+			$game = Game::getGameByGameId($pdo, $id);
+			if($game === null) {
+				throw(new \RuntimeException("Game does not exist", 404));
+			} //elseif statement that makes sure this is an instructor trying to make the put request
+
+			//update all attributes
+			$game->setGameDailyDoubleId($requestObject->gameDailyDoubleId);
+			$game->setGameDateTime($requestObject->gameDateTime);
+			$game->setGameFinalJeopardyId($requestObject->gameFinalJeopardyId);
+		}
 	}
 }
