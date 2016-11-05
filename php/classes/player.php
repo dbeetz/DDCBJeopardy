@@ -11,19 +11,19 @@ class player implements JsonSerializable {
 
 private $playerId;
 
-private $gameId;
+private $PlayergameId;
 
-private $studentId;
+private $playerStudentId;
 
-private $studentCohortId;
+private $playerStudentCohortId;
 
 
 public function __construct($playerId, $gameId, $studentId, $studentCohortId) {
   try {
     $this->setPlayerId($newPlayerId);
-    $this->setGameId($newGameId);
-    $this->setStudentId($newStudentId);
-    $this->setStudentCohortId($newStudentCohortId);
+    $this->setPlayerGameId($newPlayerGameId);
+    $this->setPlayerStudentId($newPlayerStudentId);
+    $this->setPlayerStudentCohortId($newPlayerStudentCohortId);
   } catch(RangeException $range) {
     throw new RangeException($range->getMessage(), 0, $range);
   } catch(InvalidArgumentException $invalidArgument) {
@@ -53,4 +53,51 @@ public function setPlayerId(int $newPlayerId = null) {
   }
 
   $this->playerId = $newPlayerId;
+}
+
+
+/**
+ * Accessor for Game ID
+ *
+ * @return int
+ */
+public function getPlayerGameId() {
+  return $this->playerGameId;
+}
+//Mutator
+
+public function setPlayerGameId(int $newPlayerGameId = null) {
+  if($newPlayerGameId === null) {
+    $this->playerGameId = null;
+    return;
+  }
+  if($newPlayerGameId <= 0) {
+    throw(new \RangeException("No"));
+  }
+
+  $this->playerGameId = $newPlayerGameId;
+}
+
+
+/**
+ * Accessor for Player student ID
+ *
+ * @return int
+ */
+public function getPlayerStudentId() {
+  return $this->playerStudentId;
+}
+//Mutator
+
+public function setPlayerStudentId(int $newPlayerStudentId = null) {
+  if($newPlayerStudentId === null) {
+    $this->playerStudentId = null;
+    return;
+  }
+  if($newPlayerStudentId <= 0) {
+    throw(new \RangeException("No"));
+  }
+
+  $this->playerStudentId = $newPlayerStudentId;
+
 }
