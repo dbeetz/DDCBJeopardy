@@ -359,7 +359,6 @@ class BadCategoryName implements \JsonSerializable {
 
 		$statement->execute($parameters);
 
-		//adding jsonSerialize
 		/**
 		 * formats the state variables for JSON serialization
 		 *
@@ -370,4 +369,6 @@ class BadCategoryName implements \JsonSerializable {
 			return($fields);
 		}
 	}
+
+
 }
