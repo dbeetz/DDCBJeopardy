@@ -18,7 +18,7 @@ private $playerStudentId;
 private $playerStudentCohortId;
 
 
-public function __construct($playerId, $gameId, $studentId, $studentCohortId) {
+public function __construct( int $playerId, int $playerGameId, string $playerStudentId, int $PlayerStudentCohortId) {
   try {
     $this->setPlayerId($newPlayerId);
     $this->setPlayerGameId($newPlayerGameId);
@@ -82,22 +82,23 @@ public function setPlayerGameId(int $newPlayerGameId = null) {
 /**
  * Accessor for Player student ID
  *
- * @return int
+ * @return string
  */
 public function getPlayerStudentId() {
   return $this->playerStudentId;
 }
 //Mutator
 
-public function setPlayerStudentId(int $newPlayerStudentId = null) {
-  if($newPlayerStudentId === null) {
-    $this->playerStudentId = null;
-    return;
-  }
-  if($newPlayerStudentId <= 0) {
-    throw(new \RangeException("No"));
-  }
-
-  $this->playerStudentId = $newPlayerStudentId;
-
-}
+public function setPlayerStudentId(string $newPlayerStudentId) {
+		// verify the link profile username is secure
+		$newPlayerStudentId = trim($newPlayerStudentId);
+		$newPlayerStudentId = filter_var($newPlayerStudentId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newPlayerStudentId) === true) {
+			throw(new \InvalidArgumentException("Wrong"));
+		}
+		// verify the link event name will fit in the database
+		if(strlen($newPlayerStudentId) > 9) {
+			throw(new \RangeException("Incorrect again.."));
+		}
+		$this->playerStudentId = $newPlayerStudentId;
+	}
