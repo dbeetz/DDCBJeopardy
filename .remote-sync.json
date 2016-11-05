@@ -1,0 +1,17 @@
+{
+  "uploadOnSave": false,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "bootcamp-coders.cnm.edu",
+  "port": "22",
+  "target": "/home/dbeets/public_html/jeopardy",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "dbeets",
+  "keyfile": "C:\\Users\\dbeets\\Desktop\\bootcamp\\ssh-key.openssh",
+  "passphrase": "Salomo2n",
+  "watch": [],
+  "transport": "scp"
+}
