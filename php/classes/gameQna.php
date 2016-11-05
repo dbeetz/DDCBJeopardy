@@ -187,11 +187,11 @@ class GameQna implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "INSERT INTO gameQna(gameQnaGameId, gameQnaQnaId) VALUES(:gameQnaGameId, :gameQnaQnaId)";
+		$query = "INSERT INTO gameQna(gameQnaGameId, gameQnaQnaId, gameQnaPass) VALUES(:gameQnaGameId, :gameQnaQnaId, :gameQnaPass)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["gameQnaGameId" => $this->gameQnaGameId, "gameQnaQnaId" => $this->gameQnaQnaId];
+		$parameters = ["gameQnaGameId" => $this->gameQnaGameId, "gameQnaQnaId" => $this->gameQnaQnaId, "gameQnaPass" => $this->gameQnaPass];
 		$statement->execute($parameters);
 
 		// update the null gameQnaId with what mySQL just gave us
@@ -236,7 +236,7 @@ class GameQna implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId FROM gameQna WHERE gameQnaId = :gameQnaId";
+		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId, gameQnaPass FROM gameQna WHERE gameQnaId = :gameQnaId";
 		$statement = $pdo->prepare($query);
 
 		// bind the gameQnaId to the place holder in the template
@@ -249,7 +249,7 @@ class GameQna implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"]);
+				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"], $row["gameQnaPass"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted throw it
@@ -274,7 +274,7 @@ class GameQna implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId FROM gameQna WHERE gameQnaGameId = :gameQnaGameId";
+		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId, gameQnaPass FROM gameQna WHERE gameQnaGameId = :gameQnaGameId";
 		$statement = $pdo->prepare($query);
 
 		// bind the gameQnaGameId to the placeholder in the template
@@ -286,7 +286,7 @@ class GameQna implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"]);
+				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"], $row["gameQnaPass"]);
 				$gameQnas[$gameQnas->key()] = $gameQna;
 				$gameQnas->next();
 			} catch(\Exception $exception) {
@@ -313,7 +313,7 @@ class GameQna implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId FROM gameQna WHERE gameQnaQnaId = :gameQnaQnaId";
+		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId, gameQnaPass FROM gameQna WHERE gameQnaQnaId = :gameQnaQnaId";
 		$statement = $pdo->prepare($query);
 
 		// bind the gameQnaQnaId to the placeholder in the template
@@ -325,7 +325,7 @@ class GameQna implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"]);
+				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"], $row["gameQnaPass"]);
 				$gameQnas[$gameQnas->key()] = $gameQna;
 				$gameQnas->next();
 			} catch(\Exception $exception) {
@@ -346,7 +346,7 @@ class GameQna implements \JsonSerializable {
 	 **/
 	public static function getAllGameQnas(\PDO $pdo) {
 		// create query template
-		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId FROM gameQna";
+		$query = "SELECT gameQnaId, gameQnaGameId, gameQnaQnaId, gameQnaPass FROM gameQna";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
@@ -355,7 +355,7 @@ class GameQna implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"]);
+				$gameQna = new GameQna($row["gameQnaId"], $row["gameQnaGameId"], $row["gameQnaQnaId"], $row["gameQnaPass"]);
 				$gameQnas[$gameQnas->key()] = $gameQna;
 				$gameQnas->next();
 			} catch(\Exception $exception) {
