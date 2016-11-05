@@ -369,6 +369,4 @@ class BadCategoryName implements \JsonSerializable {
 			return($fields);
 		}
 	}
-
-
 }
