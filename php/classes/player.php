@@ -200,5 +200,27 @@ playerStudentCohortId) VALUES(:playerId, :playerGameId, :playerStudentId, :playe
 
 	}
 
-}
+  public static function getPlayerbyPlayerId(\PDO $pdo, $playerId)
+   {
+       if($playerId <= 0) {
+           throw(new \PDOException("wrong"));
+       }
+       $query = "SELECT playerId, playerGameId, playerStudentId, playerStudentCohortId  FROM player WHERE playerId = :playerId";
+       $statement = $pdo->prepare($query);
+       $parameters = array("playerId" => $playerId);
+       $statement->execute($parameters);
+       try {
+           $event = null;
+           $statement->setFetchMode(\PDO::FETCH_ASSOC);
+           $row = $statement->fetch();
+           if($row !== false) {
+               $player = new player($row["playerId"], $row["playerGameId"], $row["playerStudentId"],$row["playerStudentCohortId"]));
+           }
+           $preFormat = $player->playerId;
+       } catch(\Exception $exception) {
+           throw(new \PDOException($exception->getMessage(), 0, $exception));
+       }
+       return ($player);
+   }
 
+}
