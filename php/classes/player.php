@@ -11,7 +11,7 @@ class player implements JsonSerialize {
 
 	private $playerId;
 
-	private $PlayergameId;
+	private $playerGameId;
 
 	private $playerStudentId;
 
