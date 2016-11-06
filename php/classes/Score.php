@@ -10,35 +10,35 @@ require_once("autoload.php");
  * Class Score
  *
  * @author Robert Engelbert <rob@robertengelbert.com>
+ * @author Giles Sandoval <hello@gilessandoval.com>
+ * @ver 1.0.0
  */
 class Score implements \JsonSerializable {
 	/**
-	 * scoreId this is the primary key
+	 * scoreGameQnaId this is the foreign key
 	 *
-	 * @var int $scoreId
-	 */
-	private $scoreId;
+	 * @var int $scoreGameQnaId
+	 **/
+	private $scoreGameQnaId;
 	/**
-	 * scoreGameId this is a foreign key
+	 * scorePlayerId this is a foreign key
 	 *
-	 * @var int $scoreGameId
-	 */
-	private $scoreGameId;
+	 * @var int $scorePlayerId
+	 **/
+	private $scorePlayerId;
 	/**
-	 * scoreStudentId this is a foreign key
-	 *
-	 * @var int $scoreStudentId
-	 */
-	private $scoreStudentId;
+	 * @var string $scoreFinalJeopardyAnswer
+	 **/
+	private $scoreFinalJeopardyAnswer;
 	/**
-	 * @var int $scoreStudentScore
-	 */
-	private $scoreStudentScore;
+	 * @@var int $scoreVal
+	 **/
+	private $scoreVal;
 
 	/**
 	 * Score constructor
 	 *
-	 * @param int $newScoreId
+	 * @param int $newScoreGameQnaId
 	 * @param int $newScoreGameId
 	 * @param int $newScoreStudentId
 	 * @param int $newScoreStudentScore
