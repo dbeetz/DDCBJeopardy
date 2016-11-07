@@ -39,27 +39,30 @@ class Score implements \JsonSerializable {
 	 * Score constructor
 	 *
 	 * @param int $newScoreGameQnaId
-	 * @param int $newScoreGameId
-	 * @param int $newScoreStudentId
-	 * @param int $newScoreStudentScore
+	 * @param int $newScorePlayerId
+	 * @param string $newScoreFinalJeopardyAnswer
+	 * @param int $newScoreVal
 	 * @throws \TypeError if variables are not the correct data type
 	 * @throws \InvalidArgumentException for invalid exceptions
 	 * @throws \RangeException for exceptions that are out of range
 	 * @throws \Exception for all other exceptions
 	 */
 
-	public function __construct(int $newScoreId, int $newScoreGameId, int $newScoreStudentId, int $newScoreStudentScore) {
+	public function __construct(int $newScoreGameQnaId, int $newScorePlayerId, string $newScoreFinalJeopardyAnswer, int $newScoreVal) {
 		try {
-			$this->setScoreId($newScoreId);
-			$this->setScoreGameId($newScoreGameId);
-			$this->setScoreStudentId($newScoreStudentId);
-			$this->setScoreStudentScore($newScoreStudentScore);
+			$this->setScoreGameQnaId($newScoreGameQnaId);
+			$this->setScorePlayerId($newScorePlayerId);
+			$this->setScoreFinalJeopardyAnswer($newScoreFinalJeopardyAnswer);
+			$this->setScoreVal($newScoreVal);
 		} catch(\InvalidArgumentException $invalidArgument) {
 			//rethrow exception
 			throw(new \InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
 		} catch(\RangeException $range) {
 			//rethrow exception
 			throw(new \RangeException($range->getMessage(), 0, $range));
+		} catch(\TypeError $typeError) {
+			//rethrow exception
+			throw(new \TypeError($typeError->getMessage(), 0, $typeError));
 		} catch(\Exception $exception) {
 			//rethrow exception
 			throw(new \Exception($exception->getMessage(), 0, $exception));
