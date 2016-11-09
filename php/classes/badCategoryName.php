@@ -358,11 +358,11 @@ class BadCategoryName implements \JsonSerializable {
 		$parameters = ["badCategoryNameCategoryId" => $badCategoryNameCategoryId, "badCategoryNameGameId" => $badCategoryNameGameId];
 
 		$statement->execute($parameters);
+
 	}
 
-		//added JsonSerialize
 		/**
-		 * formats the state variables for JSON serialization
+		 * formats the state variables for JSON serializations
 		 *
 		 * @return array resulting state variables to serialize
 		 */
@@ -370,4 +370,7 @@ class BadCategoryName implements \JsonSerializable {
 			$fields = get_object_vars($this);
 			return($fields);
 		}
+
+
+
 }
